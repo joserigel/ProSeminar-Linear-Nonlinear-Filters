@@ -1,8 +1,11 @@
-\documentclass{article}
+\documentclass[titlepage]{article}
 \usepackage[a4paper, margin=1in]{geometry}
 \usepackage{enumitem}
-
+\usepackage{datetime}
+\newdateformat{monthyeardate}{%
+  \monthname[\THEMONTH], \THEYEAR}
 \begin{document}
+    \include{titlepage}
     \begin{center} 
         \textbf{\LARGE{Linear and Nonlinear Filters}}\\
         \large\makebox[2.8in]{Alexander Skretting\hfill} 445 457\\
@@ -24,13 +27,15 @@
                     add implementation and code to show how matrices are used to pass pixels and transform them
                 \item Optimization of sigma values \textit{How to determine the best sigma values,
                     what factors come into play to determine those values, what makes the best result and metrics of 'best' result}
+                \item Known key differences between each types \textit{eg: How does the edges look with Box Filter vs Gaussian Filter, are there Square artifacts
+                with Box filters?}
             \end{enumerate}
         \item \textbf{Nonlinear Filters} \emph{Alexander}
             \begin{enumerate}[label=\arabic*.]
-                \item Formal Defintion of Nonlinear Filter
-                \item Types of Nonlinear Filters: \textit{Median Filtering, MinFilter, MaxFilter, MeanShift Filter, CellularAutomaton}
+                \item Formal Defintion of Nonlinear Filters
+                \item Types of Nonlinear Filters: \textit{Median Filtering, Bilateral Filtering, MinFilter, MaxFilter, MeanShift Filter, CellularAutomaton etc.}
                 \item Optimal Nonlinear Filtering \textit{Kushner–Stratonovich filtering}
-                \item Typical use Cases \textit{Noise Removal}
+                \item Typical applications of Nonlinear filters: \textit{Noise Removal}
             \end{enumerate}
         \item \textbf{Testing and Analysis} \emph{Both}
             \begin{enumerate}[label=\arabic*.]
