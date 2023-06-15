@@ -1,0 +1,151 @@
+\RequirePackage[2020-02-02]{latexrelease}
+
+
+% Template for seminar reports
+% Computer Vision Group, Visual Computing Institute, RWTH Aachen University
+\documentclass[twoside,a4paper,article]{combine}
+\usepackage[utf8]{inputenc}
+\usepackage{a4}
+\usepackage{fancyhdr}   
+%\usepackage{german}    % Uncomment this iff you're writing the report in German
+\usepackage{makeidx}
+\usepackage{color}
+\usepackage{t1enc}		% German letters in the "\hyphenation" - command
+\usepackage{latexsym}	% math symbols
+\usepackage{amssymb}    % AMS symbol fonts for LaTeX.
+\usepackage{graphicx}
+\usepackage{pslatex}
+\usepackage{ifthen}
+\usepackage{booktabs}
+\usepackage[T1]{fontenc}
+\usepackage{pslatex}
+\usepackage{psfrag}
+\usepackage{subfigure}
+\usepackage{url}
+\usepackage{datetime}
+\usepackage{xspace}
+\usepackage{newtxmath}
+
+\newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
+
+% Do not change these sizes and do not add superfluous 
+% pagebreaks to increase the page count.
+\setlength{\oddsidemargin}{3.6pt}
+\setlength{\evensidemargin}{22.6pt}
+\setlength{\textwidth}{426.8pt}
+\setlength{\textheight}{654.4pt}
+\setlength{\headsep}{18pt}
+\setlength{\headheight}{15pt}
+\setlength{\topmargin}{-41.7pt}
+\setlength{\topskip}{10pt}
+\setlength{\footskip}{42pt}
+\setlength{\parindent}{0pt}
+
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+\def\eg{\emph{e.g}\onedot} \def\Eg{\emph{E.g}\onedot}
+\def\ie{\emph{i.e}\onedot} \def\Ie{\emph{I.e}\onedot}
+\def\cf{\emph{c.f}\onedot} \def\Cf{\emph{C.f}\onedot}
+\def\etc{\emph{etc}\onedot} \def\vs{\emph{vs}\onedot}
+\def\wrt{w.r.t\onedot} \def\dof{d.o.f\onedot}
+\def\etal{\emph{et al}\onedot}
+\makeatother
+
+% =========================================================================
+\graphicspath{{pictures/}}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% =========================================================================
+\begin{document}
+\include{titlepage}
+
+\begin{abstract}
+% +++++++++++++++++++++++++
+% Insert your Abstract here (one paragraph summary)
+% +++++++++++++++++++++++++
+\end{abstract}
+
+\tableofcontents
+\newpage
+% =========================================================================
+
+\section{Introduction}
+
+
+% TEMPLATE EXAMPLES BELOW
+\newpage
+\section{example page from template}
+Please specify your name, matriculation number, the name of your advisor and the title of your report in 
+\verb+titlepage.tex+.
+
+Using BibTeX, you can cite papers in an organized way.
+Just enter the information about a paper or an article you want to cite in the \texttt{seminar\_report.bib} file and use \verb+\cite+ to cite them. For example \verb+\cite{Deng09CVPR}+ produces \cite{Deng09CVPR} or \verb+\cite{Kingma14Arxiv}+ for \cite{Kingma14Arxiv}. You can combine multiple citations in one as \verb+\cite{Deng09CVPR,Kingma14Arxiv}+, producing \cite{Deng09CVPR,Kingma14Arxiv}.
+Don't forget to compile the bib file and LaTeX will add all the cited references at the end. You can use the provided Makefile for this, or configure your LaTeX editor of choice to do it for you (\eg, TexStudio).
+Cite all the literature you use and state where the figures are from! You can use conference and journal name abbreviations in the .bib file, such as CVPR or NeurIPS (see the full list in the \texttt{abbrev.bib} file) or write the full name of the journal or conference.
+
+When a paper has both a published (peer-reviewed) journal/conference version and an ArXiv version, prefer citing the published paper instead of the ArXiv one.
+
+\section{Section Title}
+\label{sec:firstsection}
+I am a section. LaTeX will give me a number \emph{automatically} and put me into the table of contents.
+Using \verb+\label+ and \verb+\ref+ you can write that this is Section \ref{sec:firstsection}. Another section is Section \ref{sec:another}.
+
+You can use the commands \verb+\eg+,  \verb+\ie+,  \verb+\etal+ to get \eg, \ie, \etal. And ``this is a quote.''
+
+\subsection{Subsection Title With Capitalized Words}
+We can make bulleted lists as follows.
+
+\begin{itemize}
+\item I am an item,
+\item I am another item.
+\end{itemize}
+
+\subsubsection{Subsubsection with only the first word capitalized}
+I am a subsubsection, an even smaller subsection. Let's see a table.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lc}
+\toprule
+Method & Accuracy (\%) \\
+\midrule
+Boring old method & 86.6 \\
+Shiny new method & 86.7 \\
+\bottomrule
+\end{tabular}
+\caption{This is the caption for the table.}
+\label{tab:mytable}
+\end{table}
+
+Tab.~\ref{tab:mytable} is an example table. The table also got a number automatically and will be placed where LaTeX thinks it looks good. You can specify a preference with h(ere), t(op), b(ottom), p(age).
+
+\section{Another Section}
+\label{sec:another}
+
+\begin{figure}[h]
+\centering
+\caption{Insert caption here. Image from~\cite{Deng09CVPR}.}
+\label{fig:example_figure}
+\end{figure}
+
+Similarly to tables, we can also create figures. Fig.~\ref{fig:example_figure} also got a number.
+
+\section{Equations}
+LaTeX is also really good at printing equations. You can do it inline, such as $E=mc^2$, or centered, like
+
+\begin{equation}
+\label{eq:someformula}
+\mathcal L_{\mathcal T}(\vec{\lambda})
+    = \sum_{(\mathbf{x},\mathbf{s})\in \mathcal T}
+       \log P(\mathbf{s}\mid\mathbf{x}) - \sum_{i=1}^m
+       \frac{\lambda_i^2}{2\sigma^2}.
+\end{equation}
+
+Equations are numbered as well, \eg, above we have Eq.~\ref{eq:someformula}.
+
+% =========================================================================
+\bibliographystyle{alpha}
+\bibliography{abbrev,seminar_report}
+\end{document}
