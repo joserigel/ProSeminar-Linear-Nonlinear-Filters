@@ -72,6 +72,52 @@
 % =========================================================================
 
 \section{Introduction}
+\section{Linear Filters}
+As its name suggests, the function which is used to pass the image through
+must be linear and shift invariant.
+
+A common formula for linear filtering is the \emph{Correlation Filtering}.
+\[
+    g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i+k, j+l) \cdot h(k, l)}
+\]
+or commonly notated as $g = f \otimes h$.\hfill\\
+
+The desired output pixel $g(i, j)$, where $i$ and $j$ specify the
+coordinates of it, is based on a $M \times N$ sized neighborhood, 
+meaning not only does one pixel define an output pixel, but also a specified number
+of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
+also called its \emph{kernel} or \emph{mask}.\\
+
+An interesting note is that, when the kernel is convolved with an impulse signal(an image with 0 everywhere except the origin),
+it reproduces the kernel itself, whereas with correlational filtering, it produces the reflected signal.
+$$
+\underbrace{
+    \begin{bmatrix}
+        128 & 34 & 123\\
+        68 & 54 & 73 \\
+        100 & 95 & 17
+    \end{bmatrix}}_{\text{input neighborhood}}
+\otimes
+\underbrace{
+    \begin{bmatrix}
+        0.1 & 0.1 & 0.1\\
+        0.1 & 0.2 & 0.1\\
+        0.1 & 0.1 & 0.1
+    \end{bmatrix}}_{\text{kernel}}
+= 75
+$$
+
+As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\\
+
+Another common variant on the formula is having the signs of the offsets reversed.
+\[
+    g = f \ast h
+\]
+\[
+    g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i-k, j-l) \cdot h(k, l)}
+\]
+With this formula, $\ast$ is called the \emph{convolutional} operator, and the kernel $h$ is called the \emph{impulse response function}.
+
 
 
 % TEMPLATE EXAMPLES BELOW
