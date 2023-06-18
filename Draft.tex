@@ -26,6 +26,8 @@
 \usepackage{xspace}
 \usepackage{newtxmath}
 
+\usepackage{float} %figure inside minipage
+
 \newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
 
 % Do not change these sizes and do not add superfluous 
@@ -88,8 +90,6 @@ meaning not only does one pixel define an output pixel, but also a specified num
 of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
 also called its \emph{kernel} or \emph{mask}.\\
 
-An interesting note is that, when the kernel is convolved with an impulse signal(an image with 0 everywhere except the origin),
-it reproduces the kernel itself, whereas with correlational filtering, it produces the reflected signal.
 $$
 \underbrace{
     \begin{bmatrix}
@@ -109,18 +109,31 @@ $$
 
 As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\\
 
-Another common variant on the formula is having the signs of the offsets reversed.
+Another common variant on the formula is having the signs of the offsets reversed. 
 \[
     g = f \ast h
 \]
 \[
     g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i-k, j-l) \cdot h(k, l)}
 \]
-With this formula, $\ast$ is called the \emph{convolutional} operator, and the kernel $h$ is called the \emph{impulse response function}.
+With this formula, $\ast$ is called the \emph{convolutional} operator, and the kernel $h$ is called the \emph{impulse response function}. An interesting note is that, 
+when the kernel $h$ is convolved with an impulse signal $\delta$ (an image with 0 everywhere except the origin),
+it reproduces the kernel itself $h \ast \delta = h$, whereas with correlational filtering, it produces the reflected signal (inverted signal in both dimensions).\\
+
+An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions (e.g. a $1000\times1000$ image passed
+through a $3\times3$ kernel would produce a $998\times998$ image). There are a couple method to alleviate the calculation of the nonexistent neighbors.
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[zero]{\includegraphics[width=0.24\textwidth]{img/border_constant}}
+    \subfigure[wrap]{\includegraphics[width=0.24\textwidth]{img/border_wrap}}
+    \subfigure[clamp]{\includegraphics[width=0.24\textwidth]{img/border_clamp}}
+    \subfigure[mirror]{\includegraphics[width=0.24\textwidth]{img/border_reflect}}
+    
+\end{figure}\end{minipage}
 
 
-
-% TEMPLATE EXAMPLES BELOW
+% TEMPLATE EXAMPLES BELOW===========================================
 \newpage
 \section{example page from template}
 Please specify your name, matriculation number, the name of your advisor and the title of your report in 
@@ -176,7 +189,7 @@ Tab.~\ref{tab:mytable} is an example table. The table also got a number automati
 \label{fig:example_figure}
 \end{figure}
 
-Similarly to tables, we can also create figures. Fig.~\ref{fig:example_figure} also got a number.
+% Similarly to tables, we can also create figures. Fig.~\ref{fig:example_figure} also got a number.
 
 \section{Equations}
 LaTeX is also really good at printing equations. You can do it inline, such as $E=mc^2$, or centered, like
@@ -189,9 +202,9 @@ LaTeX is also really good at printing equations. You can do it inline, such as $
        \frac{\lambda_i^2}{2\sigma^2}.
 \end{equation}
 
-Equations are numbered as well, \eg, above we have Eq.~\ref{eq:someformula}.
+Equations are numbered as well, \eg, above we have Eq.~\ref{eq:someformula}.\cite{Kingma14Arxiv}
 
 % =========================================================================
 \bibliographystyle{alpha}
-\bibliography{abbrev,seminar_report}
+\bibliography{abbrev,Draft}
 \end{document}

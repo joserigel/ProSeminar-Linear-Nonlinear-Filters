@@ -7,6 +7,9 @@
 *.bbl
 *.blg
 *.toc
+*.bcf
+*.dvi
+*.xml
 
 # Template
 Seminar_Report_Latex/
