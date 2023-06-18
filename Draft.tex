@@ -26,7 +26,8 @@
 \usepackage{xspace}
 \usepackage{newtxmath}
 
-\usepackage{float} %figure inside minipage
+\usepackage{float}
+\usepackage{subcaption}
 
 \newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
 
@@ -75,20 +76,20 @@
 
 \section{Introduction}
 \section{Linear Filters}
-As its name suggests, the function which is used to pass the image through
-must be linear and shift invariant.
+With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
+must be linear and shift invariant.\smallskip
 
-A common formula for linear filtering is the \emph{Correlation Filtering}.
+A common formula for linear filtering is the \emph{Correlation Filtering}. \cite{BovikActon09}
 \[
     g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i+k, j+l) \cdot h(k, l)}
 \]
-or commonly notated as $g = f \otimes h$.\hfill\\
+or commonly notated as $g = f \otimes h$.\smallskip
 
 The desired output pixel $g(i, j)$, where $i$ and $j$ specify the
 coordinates of it, is based on a $M \times N$ sized neighborhood, 
 meaning not only does one pixel define an output pixel, but also a specified number
 of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
-also called its \emph{kernel} or \emph{mask}.\\
+also called its \emph{kernel} or \emph{mask}. \cite{Szeliski_2022}\smallskip
 
 $$
 \underbrace{
@@ -107,7 +108,7 @@ $$
 = 75
 $$
 
-As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\\
+As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\smallskip
 
 Another common variant on the formula is having the signs of the offsets reversed. 
 \[
@@ -116,95 +117,64 @@ Another common variant on the formula is having the signs of the offsets reverse
 \[
     g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i-k, j-l) \cdot h(k, l)}
 \]
-With this formula, $\ast$ is called the \emph{convolutional} operator, and the kernel $h$ is called the \emph{impulse response function}. An interesting note is that, 
-when the kernel $h$ is convolved with an impulse signal $\delta$ (an image with 0 everywhere except the origin),
-it reproduces the kernel itself $h \ast \delta = h$, whereas with correlational filtering, it produces the reflected signal (inverted signal in both dimensions).\\
-
-An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions (e.g. a $1000\times1000$ image passed
-through a $3\times3$ kernel would produce a $998\times998$ image). There are a couple method to alleviate the calculation of the nonexistent neighbors.
+With this formula, $\ast$ is called the \emph{convolutional} operator, and the kernel $h$ is called the \emph{impulse response function}. 
+An interesting note is that, when the kernel $h$ is convolved with an impulse signal $\delta$ (an image with 0 everywhere except the origin),
+it reproduces the kernel itself $h \ast \delta = h$, whereas with correlational filtering, 
+it produces the reflected signal (inverted signal in both dimensions).\cite{Szeliski_2022} In cases
+where the kernel is symmetrical on both axis (e.g. box blur), the result of convolutional and correlational is the same.
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
     \centering
-    \subfigure[zero]{\includegraphics[width=0.24\textwidth]{img/border_constant}}
-    \subfigure[wrap]{\includegraphics[width=0.24\textwidth]{img/border_wrap}}
-    \subfigure[clamp]{\includegraphics[width=0.24\textwidth]{img/border_clamp}}
-    \subfigure[mirror]{\includegraphics[width=0.24\textwidth]{img/border_reflect}}
-    
+    \subfigure[correlation]{\includegraphics[width=0.19\textwidth]{img/correlation.jpg}}
+    \subfigure[convolution]{\includegraphics[width=0.19\textwidth]{img/convolved}}
+    \caption{Difference between Correlation and Convolution Filtering by translating 32 pixels}
+    \label{fig:correlation_convolution}
+\end{figure}\end{minipage}\smallskip
+
+An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions 
+(e.g. a $1000\times1000$ image passed through a $3\times3$ kernel would produce a $998\times998$ image). 
+There are a couple method to alleviate the calculation of the nonexistent neighbors.
+
+
+\subsection{Padding (Border Effects)}
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[zero]{\includegraphics[width=0.19\textwidth]{img/border_constant}}
+    \subfigure[wrap]{\includegraphics[width=0.19\textwidth]{img/border_wrap}}
+    \subfigure[clamp]{\includegraphics[width=0.19\textwidth]{img/border_clamp}}
+    \subfigure[mirror]{\includegraphics[width=0.19\textwidth]{img/border_reflect}}
+    \subfigure[extend]{\includegraphics[width=0.19\textwidth]{img/border_extend.jpg}}
+    \caption{Different types of border padding}
+    \label{fig:padding_borders}
 \end{figure}\end{minipage}
-
-
-% TEMPLATE EXAMPLES BELOW===========================================
-\newpage
-\section{example page from template}
-Please specify your name, matriculation number, the name of your advisor and the title of your report in 
-\verb+titlepage.tex+.
-
-Using BibTeX, you can cite papers in an organized way.
-Just enter the information about a paper or an article you want to cite in the \texttt{seminar\_report.bib} file and use \verb+\cite+ to cite them. For example \verb+\cite{Deng09CVPR}+ produces \cite{Deng09CVPR} or \verb+\cite{Kingma14Arxiv}+ for \cite{Kingma14Arxiv}. You can combine multiple citations in one as \verb+\cite{Deng09CVPR,Kingma14Arxiv}+, producing \cite{Deng09CVPR,Kingma14Arxiv}.
-Don't forget to compile the bib file and LaTeX will add all the cited references at the end. You can use the provided Makefile for this, or configure your LaTeX editor of choice to do it for you (\eg, TexStudio).
-Cite all the literature you use and state where the figures are from! You can use conference and journal name abbreviations in the .bib file, such as CVPR or NeurIPS (see the full list in the \texttt{abbrev.bib} file) or write the full name of the journal or conference.
-
-When a paper has both a published (peer-reviewed) journal/conference version and an ArXiv version, prefer citing the published paper instead of the ArXiv one.
-
-\section{Section Title}
-\label{sec:firstsection}
-I am a section. LaTeX will give me a number \emph{automatically} and put me into the table of contents.
-Using \verb+\label+ and \verb+\ref+ you can write that this is Section \ref{sec:firstsection}. Another section is Section \ref{sec:another}.
-
-You can use the commands \verb+\eg+,  \verb+\ie+,  \verb+\etal+ to get \eg, \ie, \etal. And ``this is a quote.''
-
-\subsection{Subsection Title With Capitalized Words}
-We can make bulleted lists as follows.
-
 \begin{itemize}
-\item I am an item,
-\item I am another item.
+    \item \textbf{Zero:} Set all pixels outside the region to zero.
+    \item \textbf{Constant:} This is similar to Zero, but instead a specific color is chosen to replace the out of bound pixels.
+    \item \textbf{Clamp:} The edge pixels are repeated indefinitely.
+    \item \textbf{(Cyclic) Wrap (Repeat or Tile):} The entire image is repeated similar to tiling it infinitely.
+    \item \textbf{Mirror:} The image is mirrored accordingly on each of the edges.
+    \item \textbf{Extend:} This is a combination of clamping and mirroring, where clamped image is subtracted with the mirrored image.
 \end{itemize}
 
-\subsubsection{Subsubsection with only the first word capitalized}
-I am a subsubsection, an even smaller subsection. Let's see a table.
+This of course not only affects the unseen pixels, but the effects can bleed into the pixels inside the frame.
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[zero]{\includegraphics[width=0.19\textwidth]{img/boxBlur_constant}}
+    \subfigure[wrap]{\includegraphics[width=0.19\textwidth]{img/boxBlur_wrap}}
+    \subfigure[clamp]{\includegraphics[width=0.19\textwidth]{img/boxBlur_clamp}}
+    \subfigure[mirror]{\includegraphics[width=0.19\textwidth]{img/boxBlur_reflect}}
+    \subfigure[extend]{\includegraphics[width=0.19\textwidth]{img/boxBlur_extend.jpg}}
+    \caption{Effects of different paddings with box blur}
+    \label{fig:boxBlur_borders}
+\end{figure}\end{minipage}\smallskip
 
-\begin{table}[h]
-\centering
-\begin{tabular}{lc}
-\toprule
-Method & Accuracy (\%) \\
-\midrule
-Boring old method & 86.6 \\
-Shiny new method & 86.7 \\
-\bottomrule
-\end{tabular}
-\caption{This is the caption for the table.}
-\label{tab:mytable}
-\end{table}
-
-Tab.~\ref{tab:mytable} is an example table. The table also got a number automatically and will be placed where LaTeX thinks it looks good. You can specify a preference with h(ere), t(op), b(ottom), p(age).
-
-\section{Another Section}
-\label{sec:another}
-
-\begin{figure}[h]
-\centering
-\caption{Insert caption here. Image from~\cite{Deng09CVPR}.}
-\label{fig:example_figure}
-\end{figure}
-
-% Similarly to tables, we can also create figures. Fig.~\ref{fig:example_figure} also got a number.
-
-\section{Equations}
-LaTeX is also really good at printing equations. You can do it inline, such as $E=mc^2$, or centered, like
-
-\begin{equation}
-\label{eq:someformula}
-\mathcal L_{\mathcal T}(\vec{\lambda})
-    = \sum_{(\mathbf{x},\mathbf{s})\in \mathcal T}
-       \log P(\mathbf{s}\mid\mathbf{x}) - \sum_{i=1}^m
-       \frac{\lambda_i^2}{2\sigma^2}.
-\end{equation}
-
-Equations are numbered as well, \eg, above we have Eq.~\ref{eq:someformula}.\cite{Kingma14Arxiv}
+There are other ways to handle the borders such as two-phase duplication,
+which is similar to clamp but alternates between the last 2 pixels.
+A change in the filter function per individual basis can also be implemented, but it might not be practical,
+as large amounts of additional logic may be needed. \cite{BaileyAmbikumar18}
 
 % =========================================================================
 \bibliographystyle{alpha}
-\bibliography{abbrev,Draft}
+\bibliography{abbrev, Draft}
 \end{document}
