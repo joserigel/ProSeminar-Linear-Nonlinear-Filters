@@ -77,9 +77,23 @@
 \section{Introduction}
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
-must be linear and shift invariant.\smallskip
+must be linear and shift invariant. The function \pmb{L} is considered linear if there exists two constants $a$ and $b$ for any
+two input pixels $f_1(m, n)$ and $f_2(m, n)$ such that
 
-A common formula for linear filtering is the \emph{Correlation Filtering}. \cite{BovikActon09}
+\begin{align*}
+    \implies & g_1(m, n) = \pmb{L} [f_1(m, n)] \land g_2(m, n) = \pmb{L} [f_2(m, n)] \\
+    \implies & a \cdot g_1(m, n) + b \cdot g_2(m, n) = \pmb{L} [a \cdot f_1(m, n) + b \cdot f_2(m, n)]
+\end{align*}
+
+also called the \emph{superposition property of linear systems}\cite{BovikActon09}. Whereas a function is considered \emph{shift invariant} when
+\begin{align*}
+    \implies & g(m, n) = \pmb{L} [f(m, n)]\\
+    \implies & g(m - p, n - q) =  \pmb{L} [f(m - p, n - q)]
+\end{align*} $p$ and $q$ implies a spatial shift to both the input and output pixels\cite{BovikActon09}. An intuitive way to think
+of these two properties is that the function has to behave the same throughout the entire picture.\smallskip
+
+\subsection{Correlation and Convolution Filtering}
+A common formula for linear filtering is the \emph{Correlation Filtering}\cite{BovikActon09}. 
 \[
     g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i+k, j+l) \cdot h(k, l)}
 \]
@@ -91,7 +105,7 @@ meaning not only does one pixel define an output pixel, but also a specified num
 of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
 also called its \emph{kernel} or \emph{mask}. \cite{Szeliski_2022}\smallskip
 
-$$
+\[
 \underbrace{
     \begin{bmatrix}
         128 & 34 & 123\\
@@ -106,7 +120,7 @@ $$
         0.1 & 0.1 & 0.1
     \end{bmatrix}}_{\text{kernel}}
 = 75
-$$
+\]
 
 As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\smallskip
 
@@ -128,13 +142,11 @@ where the kernel is symmetrical on both axis (e.g. box blur), the result of conv
     \subfigure[correlation]{\includegraphics[width=0.19\textwidth]{img/correlation.jpg}}
     \subfigure[convolution]{\includegraphics[width=0.19\textwidth]{img/convolved}}
     \caption{Difference between Correlation and Convolution Filtering by translating 32 pixels}
-    \label{fig:correlation_convolution}
 \end{figure}\end{minipage}\smallskip
 
 An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions 
 (e.g. a $1000\times1000$ image passed through a $3\times3$ kernel would produce a $998\times998$ image). 
 There are a couple method to alleviate the calculation of the nonexistent neighbors.
-
 
 \subsection{Padding (Border Effects)}
 
@@ -172,7 +184,23 @@ This of course not only affects the unseen pixels, but the effects can bleed int
 There are other ways to handle the borders such as two-phase duplication,
 which is similar to clamp but alternates between the last 2 pixels.
 A change in the filter function per individual basis can also be implemented, but it might not be practical,
-as large amounts of additional logic may be needed. \cite{BaileyAmbikumar18}
+as large amounts of additional logic may be needed\cite{BaileyAmbikumar18}.
+
+\subsection{Separable Filtering}
+The time complexity to calculate a single pixel can be said to be $O(M \cdot N)$ as it is dependent
+on the size of the kernel. For each of the pixel in the kernel, it must be both multiplied and summed together
+with its neighbors. This can be in practice sped up by separating the horizontal and vertical operations, hence performing
+a one dimensional convolution horizontally, then one additional operation for the vertical convolution. This kernel in this case is the
+outer product of two one dimensional kernels\cite{Szeliski_2022}. 
+\[
+    \pmb{K} = v \otimes h = 
+    \begin{bmatrix}
+        v_1h_1 & v_1h_2 & v_1 h_3 & \hdots & v_1h_n \\
+        v_2h_1 & v_2h_2 & v_2 h_3 & \hdots & v_2h_n \\
+        \vdots & \vdots & \vdots & \ddots & \vdots \\
+        v_m h_1 & v_m h_2 & v_m h_3 & \hdots & v_m h_n \\
+    \end{bmatrix}
+\]
 
 % =========================================================================
 \bibliographystyle{alpha}
