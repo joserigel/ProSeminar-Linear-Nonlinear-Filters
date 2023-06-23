@@ -202,6 +202,143 @@ outer product of two one dimensional kernels\cite{Szeliski_2022}.
     \end{bmatrix}
 \]
 
+Also notated as $K=vh^{\pmb{T}}$, where $\pmb{T}$ denotes tranposing $h$.
+
+A method to check whether a given Kernel is separable is to use \emph{Singular Value Decomposition (SVD)}\cite{Szeliski_2022}
+
+\[        
+    \pmb{K} = \sum_{i}{\sigma_i \cdot u_i \cdot v_i^{\pmb{T}}} 
+\]
+or more generally
+\begin{align*}
+        \pmb{K} =& \textbf{U}_{m\times p} \pmb{\textstyle\sum}_{p\times p} \textbf{V}_{p\times n}^{\pmb{T}} \\
+        \pmb{K} =& \begin{bmatrix}
+            u_0 & \hdots & u_{p-1}
+        \end{bmatrix}
+        \begin{bmatrix}
+            \sigma_0&&\\
+            &\ddots&\\
+            &&\sigma_{p-1}
+        \end{bmatrix}
+        \begin{bmatrix}
+            v_0 \\
+            \vdots \\
+            v_{p-1}
+        \end{bmatrix}
+\end{align*}
+Note that it requires the number of rows and columns must be the same, we can also alleviate this by putting 0 appropriately,
+to allow the kernel to be a square matrix.Then the first singular value $\sigma_0$ is checked. If it is the only one that is non zero,
+and the rest is zero, then the kernel is separable. As an example, the sobel filter, which is used for edge detection, 
+can be separated into two separate operations. In this case, this is for the horizontal derivative approximation.
+\[
+    \frac{1}{8}
+    \begin{bmatrix}
+        -1 & 0 & 1 \\
+        -2 & 0 & 2 \\
+        -1 & 0 & 1
+    \end{bmatrix}
+    =
+    \frac{1}{8}
+    \begin{bmatrix} -1 & 0 & 1 \end{bmatrix}
+    \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}
+\]
+The normalization of the operators are easily calculated by dividing each operator with the absolute sum of the entries.
+\[  
+    \begin{bmatrix} -1 & 0 & 1 \end{bmatrix} \Rightarrow \vert -1 \vert + \vert 0 \vert + \vert 1 \vert = 2 \Rightarrow \frac{1}{2}
+\]
+Then the normalized operator is
+\[
+    \frac{1}{2} \begin{bmatrix} -1 & 0 & 1 \end{bmatrix}
+\]
+it applies to the vertical operator as well
+\[
+    \frac{1}{4} \begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix}
+\]
+The following are more examples of common separable filtering.
+
+\begin{center}\begin{tabular}{c c c c c}
+    $
+        \frac{1}{K^2}
+        \begin{bmatrix}
+           1 & 1 & \hdots & 1 \\
+           1 & 1 & \hdots & 1 \\
+           \vdots & \vdots & \ddots & \vdots \\
+           1 & 1 & \hdots & 1
+        \end{bmatrix}
+    $
+ &
+    $
+        \frac{1}{16}
+        \begin{bmatrix}
+            1 & 2 & 1 \\
+            2 & 4 & 2 \\
+            1 & 2 & 1
+        \end{bmatrix}
+    $
+& 
+    $
+        \frac{1}{256}
+        \begin{bmatrix}
+            1 & 4 & 6 & 4 & 1 \\
+            4 & 16 & 24 & 16  & 4 \\
+            6 & 24 & 36 & 24 & 6 \\
+            4 & 16 & 24 & 16  & 4 \\
+            1 & 4 & 6 & 4 & 1
+        \end{bmatrix}
+    $
+& 
+    $
+        \frac{1}{8}
+        \begin{bmatrix}
+            -1 & 0 & 1 \\
+            -2 & 0 & 2 \\
+            -1 & 0 & 1
+        \end{bmatrix}
+    $
+& 
+    $
+        \frac{1}{4}
+        \begin{bmatrix}
+            1 & -2 & 1 \\
+            -2 & 4 & -2  \\
+            1 & -2 & 1
+        \end{bmatrix}
+    $
+\\
+    $
+        \frac{1}{K} 
+        \begin{bmatrix} 1 & 1 & \hdots & 1 \end{bmatrix}
+    $
+&
+    $
+        \frac{1}{4} 
+        \begin{bmatrix} 1 & 2 & 1 \end{bmatrix}
+    $
+&   
+    $
+        \frac{1}{16}
+        \begin{bmatrix} 1 & 4 & 6 & 4 & 1 \end{bmatrix}
+    $
+&   
+    $
+        \frac{1}{2} 
+        \begin{bmatrix} -1 & 0 & 1 \end{bmatrix}
+    $
+&
+    $
+        \frac{1}{2} 
+        \begin{bmatrix} -1 & 2 & 1 \end{bmatrix}
+    $
+\\
+Box & Bilinear & Gaussian & Sobel & Corner 
+\end{tabular}\end{center}
+
+Note that for Corner filtering, the kernel is not normalized.
+With some filters, it is not always possible to separate it into just two operations, therefore it can be
+transformed into a series of 1 dimensional operations. However, this may be impractical as it increases the time and space
+complexity.
+
+
 % =========================================================================
 \bibliographystyle{alpha}
 \bibliography{abbrev, Draft}
