@@ -229,7 +229,7 @@ or more generally
 Note that it requires the number of rows and columns must be the same, we can also alleviate this by putting 0 appropriately,
 to allow the kernel to be a square matrix.Then the first singular value $\sigma_0$ is checked. If it is the only one that is non zero,
 and the rest is zero, then the kernel is separable. As an example, the sobel filter, which is used for edge detection, 
-can be separated into two separate operations. In this case, this is for the horizontal derivative approximation.
+can be separated into two separate operations. In this case, this is for the horizontal derivative approximation. \cite{CHANG2023160}
 \[
     \frac{1}{8}
     \begin{bmatrix}
@@ -337,6 +337,11 @@ Note that for Corner filtering, the kernel is not normalized.
 With some filters, it is not always possible to separate it into just two operations, therefore it can be
 transformed into a series of 1 dimensional operations. However, this may be impractical as it increases the time and space
 complexity.
+
+\section{Simple examples of Linear Filters}
+One notable example of a basic filter is the box filter, where each pixel is determined by the average of a $K \times K$ 
+neighbordhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
+old pixel and adding the newest pixels to the running sum.
 
 
 % =========================================================================
