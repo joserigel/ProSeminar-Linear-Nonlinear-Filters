@@ -77,33 +77,33 @@
 \section{Introduction}
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
-must be linear and shift invariant. The function \pmb{L} is considered linear if there exists two constants $a$ and $b$ for any
+must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
 two input pixels $f_1(m, n)$ and $f_2(m, n)$ such that
 
 \begin{align*}
-    \implies & g_1(m, n) = \pmb{L} [f_1(m, n)] \land g_2(m, n) = \pmb{L} [f_2(m, n)] \\
-    \implies & a \cdot g_1(m, n) + b \cdot g_2(m, n) = \pmb{L} [a \cdot f_1(m, n) + b \cdot f_2(m, n)]
+    \implies & g_1(m, n) = \boldsymbol{L} [f_1(m, n)] \land g_2(m, n) = \boldsymbol{L} [f_2(m, n)] \\
+    \implies & a \cdot g_1(m, n) + b \cdot g_2(m, n) = \boldsymbol{L} [a \cdot f_1(m, n) + b \cdot f_2(m, n)]
 \end{align*}
 
 also called the \emph{superposition property of linear systems}\cite{BovikActon09}. Whereas a function is considered \emph{shift invariant} when
 \begin{align*}
-    \implies & g(m, n) = \pmb{L} [f(m, n)]\\
-    \implies & g(m - p, n - q) =  \pmb{L} [f(m - p, n - q)]
+    \implies & g(m, n) = \boldsymbol{L} [f(m, n)]\\
+    \implies & g(m - p, n - q) =  \boldsymbol{L} [f(m - p, n - q)]
 \end{align*} $p$ and $q$ implies a spatial shift to both the input and output pixels\cite{BovikActon09}. An intuitive way to think
-of these two properties is that the function has to behave the same throughout the entire picture.\smallskip
+of these two properties is that the function has to behave the same throughout the entire picture.
 
 \subsection{Correlation and Convolution Filtering}
 A common formula for linear filtering is the \emph{Correlation Filtering}\cite{BovikActon09}. 
 \[
     g(i,j) = \sum_{l \in \mathscr{M}}\sum_{k \in \mathscr{N}}{f(i+k, j+l) \cdot h(k, l)}
 \]
-or commonly notated as $g = f \otimes h$.\smallskip
+or commonly notated as $g = f \otimes h$.
 
 The desired output pixel $g(i, j)$, where $i$ and $j$ specify the
 coordinates of it, is based on a $M \times N$ sized neighborhood, 
 meaning not only does one pixel define an output pixel, but also a specified number
 of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
-also called its \emph{kernel} or \emph{mask}. \cite{Szeliski_2022}\smallskip
+also called its \emph{kernel} or \emph{mask}\cite{Szeliski_2022}.
 
 \[
 \underbrace{
@@ -122,7 +122,7 @@ also called its \emph{kernel} or \emph{mask}. \cite{Szeliski_2022}\smallskip
 = 75
 \]
 
-As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.\smallskip
+As the above example with a $3 \times 3$ kernel, a total of 9 pixels is needed to calculate a single output pixel.
 
 Another common variant on the formula is having the signs of the offsets reversed. 
 \[
@@ -142,7 +142,7 @@ where the kernel is symmetrical on both axis (e.g. box blur), the result of conv
     \subfigure[correlation]{\includegraphics[width=0.19\textwidth]{img/correlation.jpg}}
     \subfigure[convolution]{\includegraphics[width=0.19\textwidth]{img/convolved}}
     \caption{Difference between Correlation and Convolution Filtering by translating 32 pixels}
-\end{figure}\end{minipage}\smallskip
+\end{figure}\end{minipage}
 
 An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions 
 (e.g. a $1000\times1000$ image passed through a $3\times3$ kernel would produce a $998\times998$ image). 
@@ -179,7 +179,7 @@ This of course not only affects the unseen pixels, but the effects can bleed int
     \subfigure[extend]{\includegraphics[width=0.19\textwidth]{img/boxBlur_extend.jpg}}
     \caption{Effects of different paddings with box blur}
     \label{fig:boxBlur_borders}
-\end{figure}\end{minipage}\smallskip
+\end{figure}\end{minipage}
 
 There are other ways to handle the borders such as two-phase duplication,
 which is similar to clamp but alternates between the last 2 pixels.
@@ -193,7 +193,7 @@ with its neighbors. This can be in practice sped up by separating the horizontal
 a one dimensional convolution horizontally, then one additional operation for the vertical convolution. This kernel in this case is the
 outer product of two one dimensional kernels\cite{Szeliski_2022}. 
 \[
-    \pmb{K} = v \otimes h = 
+    \boldsymbol{K} = v \otimes h = 
     \begin{bmatrix}
         v_1h_1 & v_1h_2 & v_1 h_3 & \hdots & v_1h_n \\
         v_2h_1 & v_2h_2 & v_2 h_3 & \hdots & v_2h_n \\
@@ -202,17 +202,17 @@ outer product of two one dimensional kernels\cite{Szeliski_2022}.
     \end{bmatrix}
 \]
 
-Also notated as $K=vh^{\pmb{T}}$, where $\pmb{T}$ denotes tranposing $h$.
+Also notated as $K=vh^{\boldsymbol{T}}$, where $\boldsymbol{T}$ denotes tranposing $h$.
 
-A method to check whether a given Kernel is separable is to use \emph{Singular Value Decomposition (SVD)}\cite{Szeliski_2022}
+A method to check whether a given Kernel is separable is to use \emph{Singular Value Decomposition (SVD)} \cite{Szeliski_2022}
 
 \[        
-    \pmb{K} = \sum_{i}{\sigma_i \cdot u_i \cdot v_i^{\pmb{T}}} 
+    \boldsymbol{K} = \sum_{i}{\sigma_i \cdot u_i \cdot v_i^{\boldsymbol{T}}} 
 \]
 or more generally
 \begin{align*}
-        \pmb{K} =& \textbf{U}_{m\times p} \pmb{\textstyle\sum}_{p\times p} \textbf{V}_{p\times n}^{\pmb{T}} \\
-        \pmb{K} =& \begin{bmatrix}
+        \boldsymbol{K} =& \textbf{U}_{m\times p} \boldsymbol{\textstyle\sum}_{p\times p} \textbf{V}_{p\times n}^{\boldsymbol{T}} \\
+        \boldsymbol{K} =& \begin{bmatrix}
             u_0 & \hdots & u_{p-1}
         \end{bmatrix}
         \begin{bmatrix}
@@ -333,16 +333,101 @@ The following are more examples of common separable filtering.
 Box & Bilinear & Gaussian & Sobel & Corner 
 \end{tabular}\end{center}
 
-Note that for Corner filtering, the kernel is not normalized.
+Note that for Corner filtering, the kernel is not normalized. Normalization is important as otherwise, a pixel may go beyond the allowed value range.
+In cases where the kernel has a negative value, it means that the pixel value is inverted, since an integer overflow occurs (e.g. $64
+(-1)= -64 \mod 256 = 192$ for one channel in an 8 bit pixel).
 With some filters, it is not always possible to separate it into just two operations, therefore it can be
 transformed into a series of 1 dimensional operations. However, this may be impractical as it increases the time and space
 complexity.
 
-\section{Simple examples of Linear Filters}
-One notable example of a basic filter is the box filter, where each pixel is determined by the average of a $K \times K$ 
-neighbordhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
-old pixel and adding the newest pixels to the running sum.
+\subsection{Examples of Linear Filters}
+\begin{itemize}
+    \item \textbf{Box Filter:} each pixel is determined by the average of a $K \times K$ 
+        neighbordhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
+        old pixel and adding the newest pixels to the running sum. As the pixel is influenced equally by a square neighborhood, this may not be ideal as some `square artifacts' can be seen.
+    \item \textbf{Bartlett Filter:} one solution to this is by separably convolving the image
+        with a linear `tent' function (having its peak in the middle). A $3\times 3$ version of this is called the bilinear kernel.
+    \item \textbf{Approximate Gaussian Filter:} if the Bartlett kernel is convolved with itself, this will produce an approximate version of the gaussian kernel.
+\end{itemize}
 
+Essentially, the three above filters are different mathematical functions applied both horizontally and vertically.\\
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[Average]{\includegraphics[width=0.29\textwidth]{img/box_graph.png}}
+    \subfigure[Bartlett (Tent)]{\includegraphics[width=0.29\textwidth]{img/tent_graph.png}}
+    \subfigure[Gaussian]{\includegraphics[width=0.29\textwidth]{img/gaussian_graph.png}}
+    \caption{One dimensional graphs of the filters}\label{fig:graph}
+\end{figure}\end{minipage}
+
+As its name suggests, the Gaussian Filter is based on the Gaussian function (also commonly known as the normal function).
+Two dimensionally, it can be expressed as \cite{MISRA2020289}
+\[
+    G_{2D}(x, y, \sigma) = \frac{1}{2\pi\sigma^2}e^{-\frac{x^2 + y^2}{2\sigma^2}}
+\]
+It can be seen from the graph that the lower the sigma value, the narrower the neighborhood becomes. From testing, using the gaussian blur, as opposed to
+the box filter produces a better image, as it preserves rounded corners, however, to produce an equally `blurred' image, a larger kernel is required for Gaussian, which can be argued to then be slower
+than using the box filter.
+These filters are mainly used to smoothen(blur) the image, where the low frequencies are let through as well as reducing the effect of the high frequencies (high frequencies and low frequencies both referring to
+the brightness/darkness of each pixel). In practical applications, this is done to reduce high frequency noises.
+A creative application to smoothing the images, is that the smoothen images can be used as a mask to sharpen the image by adding the difference between the original and blurred image.
+This method is called \emph{unsharp masking}\cite{Szeliski_2022}.
+\[
+  g_{sharp} = f + \gamma(f - h_{blur} \ast f)  
+\]
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[original]{\includegraphics[width=0.19\textwidth]{img/original_mask.jpg}}
+    \subfigure[unsharp mask]{\includegraphics[width=0.19\textwidth]{img/unsharp_mask.jpg}}
+    \subfigure[difference]{\includegraphics[width=0.19\textwidth]{img/difference_unsharp.jpg}}
+    \subfigure[sharpened]{\includegraphics[width=0.19\textwidth]{img/sharpened.jpg}}
+    \caption{Unsharp masking with Gaussian blur}\label{fig:unsharp_mask}
+\end{figure}\end{minipage}
+The result of the image traces a bright outline througout the image between the darker(shadow) and lighter part. It can also be seen, that
+the difference between the blurred image and the original results in an approximate edge detection. A better way to extract edges by means of linear filtering is
+by the use of the \emph{Sobel filter}. \cite{Szeliski_2022}
+
+\subsection{Sobel Filter}As per the example in the previous section, the horizontal Sobel operator is calculated by combining the \emph{horizontal central difference}
+(which calculates the second horizontal derivative of the pixel and places it in the center itself) and a vertical linear tent filter to smooth the result.
+
+The two sobel operator emphasizes the horizontal or vertical edges respectively, although as seen in the images, it can also highlight diagonal edges.\\
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[original]{\includegraphics*[width=0.29\textwidth]{codes/nasa.jpg}}
+    \subfigure[horizontal]{\includegraphics[width=0.29\textwidth]{img/sobelHorizontal.png}}
+    \subfigure[vertical]{\includegraphics[width=0.29\textwidth]{img/sobelVertical.png}}
+    \caption{A picture of the Data Acquistion System at the Ames Research Center Vertical and Horizontal Sobel filtering\cite{NASA_on_The_Commons_2023}}\label{fig:sobel}
+\end{figure}\end{minipage}
+
+\subsection{Band-pass and steerable Filter}
+In the above example, the sobel filter is calculated either for the horizontal or
+vertical axis. Nevertheless, it is possible to calculate filters that uses a specified 
+\emph{directional derivative} $\nabla_{\boldsymbol{\hat{u}}} = \frac{\partial}{\partial\boldsymbol{\hat{u}}}$ 
+and a \emph{unit direction} $\boldsymbol{\hat{u}} = (\cos \theta, \sin \theta)$\cite{Szeliski_2022}.
+\[
+    \boldsymbol{\hat{u}} \cdot \nabla (G \ast f) = \nabla_{\boldsymbol{\hat{u}}}(G \ast f) = (\nabla_{\boldsymbol{\hat{u}}}G) \ast  f
+\]
+Then it is also preferable to smooth it with the Gaussian filter.
+\[
+    G_{\boldsymbol{\hat{u}}} = u G_x + v G_y = u \frac{\partial G}{\partial x} + v \frac{\partial G}{\partial y} 
+\]
+This is called the \emph{directional} or \emph{oriented} filter.
+Another filter is called the \emph{Laplacian operator}, which is the second (undirected)derivative.\cite{Szeliski_2022}
+\[
+    \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
+\]
+and again, it can be smoothed with the Gaussian filter. It is equivalent to the \emph{Laplacian of Gaussian}(LoG) filter.
+\[
+    \nabla^2 G (x, y, \sigma) = (\frac{x^2 + y^2}{\sigma^4} - \frac{2}{\sigma^2}) G (x, y, \sigma)
+\]
+The aforementioned filters are more sophisticated as they require the second or first derivatives and they can filter both the low and high frequencies. 
+These filters are called \emph{band-pass filters}.
+Since the filters are based on the gradient fields, which are undirected, it can be `steered' by freely choosing a unit direction, hence the name
+\emph{steerable} filter. The advantage of this is that multiple variations of directions can easily be calculated with minimal cost as the derivative must only be calculated once. In case of higher order derivatives,
+the calculation must be done repeatedly with the same unit vector. This can although be calculated with a relatively small number of functions\cite{Szeliski_2022}. Consider the example below for the second-order derivatives,
+which requires 3 basis functions.
+\[
+    G_{\boldsymbol{\hat{u}}\boldsymbol{\hat{u}}} = u^2 G_{xx} + 2uvG_{xy} + v^2 G_{yy} \text{with} \hspace*{0.5em}\boldsymbol{\hat{u}} = (u, v)
+\]
 
 % =========================================================================
 \bibliographystyle{alpha}
