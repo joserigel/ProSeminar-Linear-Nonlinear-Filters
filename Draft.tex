@@ -226,7 +226,7 @@ or more generally
             v_{p-1}
         \end{bmatrix}
 \end{align*}
-Note that it requires the number of rows and columns must be the same, we can also alleviate this by putting 0 appropriately,
+Note that it requires the number of rows and columns must be the same, it can however be solved by putting 0 as the missing rows/columns,
 to allow the kernel to be a square matrix.Then the first singular value $\sigma_0$ is checked. If it is the only one that is non zero,
 and the rest is zero, then the kernel is separable. As an example, the sobel filter, which is used for edge detection, 
 can be separated into two separate operations. In this case, this is for the horizontal derivative approximation.
