@@ -75,6 +75,7 @@
 % =========================================================================
 
 \section{Introduction}
+T
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
 must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
@@ -266,7 +267,7 @@ The following are more examples of common separable filtering.
            1 & 1 & \hdots & 1
         \end{bmatrix}
     $
- &
+&
     $
         \frac{1}{16}
         \begin{bmatrix}
@@ -395,7 +396,7 @@ The two sobel operator emphasizes the horizontal or vertical edges respectively,
     \subfigure[original]{\includegraphics*[width=0.29\textwidth]{codes/nasa.jpg}}
     \subfigure[horizontal]{\includegraphics[width=0.29\textwidth]{img/sobelHorizontal.png}}
     \subfigure[vertical]{\includegraphics[width=0.29\textwidth]{img/sobelVertical.png}}
-    \caption{A picture of the Data Acquistion System at the Ames Research Center Vertical and Horizontal Sobel filtering\cite{NASA_on_The_Commons_2023}}\label{fig:sobel}
+    \caption{Vertical and Horizontal Sobel filtering\cite{NASA_on_The_Commons_2023}}\label{fig:sobel}
 \end{figure}\end{minipage}
 
 \subsection{Band-pass and steerable Filter}
@@ -419,15 +420,27 @@ and again, it can be smoothed with the Gaussian filter. It is equivalent to the 
 \[
     \nabla^2 G (x, y, \sigma) = (\frac{x^2 + y^2}{\sigma^4} - \frac{2}{\sigma^2}) G (x, y, \sigma)
 \]
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianOriginal.png}}
+    \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacian.png}}
+    \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianAdded.png}}
+    \caption{Laplacian Filtering\cite{NASA_on_The_Commons_1970} (a) Orinal image of NASA pilot; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
+    \label{fig:padding_borders}
+\end{figure}\end{minipage}
 The aforementioned filters are more sophisticated as they require the second or first derivatives and they can filter both the low and high frequencies. 
 These filters are called \emph{band-pass filters}.
 Since the filters are based on the gradient fields, which are undirected, it can be `steered' by freely choosing a unit direction, hence the name
 \emph{steerable} filter. The advantage of this is that multiple variations of directions can easily be calculated with minimal cost as the derivative must only be calculated once. In case of higher order derivatives,
 the calculation must be done repeatedly with the same unit vector. This can although be calculated with a relatively small number of functions\cite{Szeliski_2022}. Consider the example below for the second-order derivatives,
-which requires 3 basis functions.
+which requires 3 basis functions. Although the basis filters are not in itself separable, it can be expressed as a linear combination of multiple separable filters TODOTODOTODO
 \[
     G_{\boldsymbol{\hat{u}}\boldsymbol{\hat{u}}} = u^2 G_{xx} + 2uvG_{xy} + v^2 G_{yy} \text{with} \hspace*{0.5em}\boldsymbol{\hat{u}} = (u, v)
 \]
+
+\subsection{Summed area table (integral image)}
+
+
 
 % =========================================================================
 \bibliographystyle{alpha}
