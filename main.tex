@@ -68,15 +68,15 @@ Lastly on minimum and maximum filters, a bit about binary images. What are binar
     \caption{Figure 3.6 using a minimum filter succeeded by a maximum filter fills the gaps in the figure and then decreases it's size}
     \label{fig:enter-label}
 \end{figure}
-\subsubsection{Mean Shift Filtering}
-Placeholder text
+\subsubsection{Mean Shift Algorithm}
+The mean shift algorithm is often referred to as a "hill climbing algorithm". Given for instance a scatter plot, or such, the mean shift algorithm will locate the area of the plot where the data-point density is at it's highest, metaphorically speaking, a hill (densest data cluster).
 
 \subsubsection{Cellular Automata}
 Cellular automata is something one probably has heard about in other contexts than image processing. Tracing it roots back to the late 40s, as the brainchild of the two late great scientists Stanislaw Ulam, and of course, the father of computer science himself Neumann Janos, commonly known as John von Neumann. Von Neumann was working on self-replicating-systems when he, with some help from Ulam, came up with his Cellular Automaton. Proving that his self-replicating automaton would work. But how can one apply this seemingly unrelated part of computer science to image processing?  First of all, let's assess how cellular automata work.
 
 In essence, cellular automata are grids of cells, each containing what can be considered a finite state machine. They can be very useful in the analysis of many different systems, as well as in the fields of physics and biology. 
-Now how specifically does one apply a cellular automaton to image processing?  As of now one of the most major application areas is noise removal in binary images.
-\cite{rosin}
+Now how specifically does one apply a cellular automaton to image processing?  As of now one of the most major application areas is noise removal in binary images. \cite{inproceedings} As demonstrated by Rosin and Sun\cite{rosin} it can also be used for edge detection, which, as previously mentioned, is an \textit{essential} part of image processing.
+
 
 
 \subsection{Optimal Non-Linear filtering}
@@ -85,6 +85,12 @@ Placeholder text
 \subsection{Typical applications of Non-Linear filters}
 The subject of where one can apply Non-Linear filters has already been touched upon. Likely, the most prominent application area of non-linear filters is in noise filtering.
 
+\subsection{Conclusion}
+Now that we have discussed some different image processing algorithms, specifically several linear and non-linear filtering ones it is time to assess their use cases, and to compare them. A first obvious question that may arise is whether any specific type of filtering is simply objectively better. As with many situations in life, and different fields of computer science, this is hard to find. Just as it may be hard to determine a specific sorting algorithm as objectively the best in any given scenario, it is equally hard to determine an objectively best filtering algorithm. In some programs or prototypes it may be prudent to apply a simple filtering algorithm as nothing too extensive is needed. For ease of use and understanding, many linear filters may well hold the edge over most non-linear filters. Many non-linear filters can seem less intuitive, and hence be harder to understand and implement, possibly being overly complex for certain scenarios. It is also important to note that in most use cases, be that in pure image processing, signal processing or computer vision, many filters are used in combination to achieve optimal results. Applying specific filtering techniques for specific scenarios and then weaving all the data they produce together may well produce far more accurate data than taking a "one-size fits all" approach to filters.
+
+Filtering can be an incredibly helpful tool in processing images. Removing noise from images, increasing clarity, detecting edges and such have applications in the closely related field of computer vision as well, but none of this comes without it's drawbacks. As we have seen, applying a wrong filter can easily lead to a decrease in clarity of images, perhaps only succeeding in making an image more blurry. Moreover, even if applying "the optimal" filtering algorithm it by no stretch of the imagination guarantees a completely noise and error free result. Filtering is not magic, certain images may be past a point in which it physically cannot get any clearer. This also leads into another issue, namely over-processing. Passing a signal or an image through a filter one time (or more) too many can lead to results which no longer resemble the original, what it was supposed too look like, or lead to unnatural results. In these cases, one may very well consider whether the application of a filter actually helped. If one in certain scenarios realizes that this answer for this case was actually no, one may already have spent far too many resources and hours on something that ended up being producing nothing practical. Resource management is very often of the essence.
+
+Even with all the potential drawbacks that filtering can bring, the pros most likely heavily outweigh the cons. As technology advances, new techniques and new equipment will lead to even more advanced image processing. With the advent of AI, many of it's techniques may be appended to already existing techniques, or spawn new ones entirely. This will all surely lead to even more advanced filtering techniques, and with the blistering increase of data (big data) out there, there is no lack in training data for all AI/ML/Neural Network's needs. This will probably be the most major source of improvement for future filtering techniques.
 
 \printbibliography
 
