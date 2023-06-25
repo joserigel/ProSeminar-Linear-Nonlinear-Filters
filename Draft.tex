@@ -30,6 +30,8 @@
 \usepackage{subcaption}
 
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\usepackage{listings}
+
 
 
 
@@ -84,10 +86,13 @@ understand the pictures better and take information as we need through the conte
 hard for computers to handle images and extract necessary informations.
 
 This is where filtering is utilized to pass through and create a desired output image, catering to one' individual goals. The two major categories of filtering in Image processing are \emph{Linear} and \emph{Nonlinear filters}, with each
-having variations of their own, tailored to their specific use cases, whether for noise suppresion, edge detection or image enhancement\cite{MISRA2020289}. The comparison between each filter is not only determining which filters produces the highest quality output, yet
+having variations of their own, tailored to their specific use cases, whether for noise suppresion, edge detection or image enhancement\cite{MISRA2020289}. Not only are filters used in isolation, but they can aid
+in further methods and algorithms in image processing, as they create aim to create clean and workable images for computers. The comparison between each filter is not only determining which filters produces the highest quality output, yet
 also defined by its computing complexity, both in space and time complexity. Optimizing these filters by means of different algorithms and strategies while maintaining its quality is highly preferable.
 
-In this article, we will discuss the differences between different types of linear and non linear filters.\footnotemark\footnotetext{Written by Jose}
+The two major categories of filtering in image processing are \textbf{\emph{Linear Filters}} and \textbf{\emph{Non-linear Filters}}. Linear Filtering is a simpler, yet powerful strategy for image processing, as they
+only require a linear neighborhood operation to calculate the output image. For difficult scenarios however, it may not be possible to only rely on basic multiplications and sums. This is where Non-linear filters comes in handy, as they
+feature concepts such as cellular automata. This article aims to discuss different types of filters, their applications and how each of them provides different benefits\footnotemark\footnotetext{Written by Jose}
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
 must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
@@ -116,7 +121,8 @@ The desired output pixel $g(i, j)$, where $i$ and $j$ specify the
 coordinates of it, is based on a $M \times N$ sized neighborhood, 
 meaning not only does one pixel define an output pixel, but also a specified number
 of its neighbors. The influence of each pixel in the neighborhood is defined by the filter coefficient $h(k, l)$,
-also called its \emph{kernel} or \emph{mask}\cite{Szeliski_2022}.
+also called its \emph{kernel} or \emph{mask}\cite{Szeliski_2022}. With this formula, it is possible to have a kernel that is rectangular and not square,
+but through convention, it is generally preferred to have the kernel be square. As later discussed, square matrices are also more cost effective to calculate.
 
 \[
 \underbrace{
@@ -355,12 +361,34 @@ Box & Bilinear & Gaussian & Sobel & Corner
 
 Note that for Corner filtering, the kernel is not normalized. Normalization is important as otherwise, a pixel may go beyond the allowed value range.
 In cases where the kernel has a negative value, it means that the pixel value is inverted, since an integer overflow occurs (e.g. $64
-(-1)= -64 \mod 256 = 192$ for one channel in an 8 bit pixel).
+(-1)= -64 \mod 256 = 192$ for one channel in an 8 bit pixel).`'
 With some filters, it is not always possible to separate it into just two operations, therefore it can be
 transformed into a series of 1 dimensional operations. However, this may be impractical as it increases the time and space
 complexity.
 
 \subsection{Examples of Linear Filters}
+Due to the fact that linear filter in essence is the sum of pixels in a neighborhood with varying weights and sizes, there are infinitely many different kernels that can
+define operators which classified as linear and invariant. It is also even possible to factor in different color channels. As an example, it is possible to shift the hue of an image.
+In this example, using a kernel of $\begin{bmatrix}0 & 0 & 1\end{bmatrix}$, the hue is shifted to the left (negative).
+\lstset{language=Python}
+\begin{lstlisting}
+img = cv.imread("color.jpg")
+kernel = np.array([[[0, 0, 1]]])
+convolved = ndimage.convolve(img, kernel, mode='reflect')
+cv.imwrite('../img/colorShift.jpg', convolved)
+\end{lstlisting}
+
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[original]{\includegraphics[width=0.30\textwidth]{codes/color.jpg}}
+    \subfigure[shifted]{\includegraphics[width=0.30\textwidth]{img/colorShift.jpg}}
+    \caption{Hue shifting using linear filters of the GALEX telescope image\cite{NASA_on_The_Commons_23}}
+    \label{fig:hueshift}
+\end{figure}\end{minipage}
+
+The simplest application for linear filters are for smoothing(blurring) images. This not only serves their inherent purpose, but as later discussed, it can be used to aid other applications such as
+edge detection or image enhancement.
 \begin{itemize}
     \item \textbf{Box Filter:} each pixel is determined by the average of a $K \times K$ 
         neighborhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
@@ -369,6 +397,17 @@ complexity.
         with a linear `tent' function (having its peak in the middle). A $3\times 3$ version of this is called the bilinear kernel.
     \item \textbf{Approximate Gaussian Filter:} if the Bartlett kernel is convolved with itself, this will produce an approximate version of the gaussian kernel.
 \end{itemize}
+
+This intuitively can be used to reduce the amount of noise on a picture. However, since it naively blurs the entire image,
+details are also lost in the process.\\
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[original]{\includegraphics[width=0.32\textwidth]{codes/original_noise.jpg}}
+    \subfigure[noise]{\includegraphics[width=0.32\textwidth]{codes/noise.jpg}}
+    \subfigure[gaussian]{\includegraphics[width=0.32\textwidth]{img/noiseSuppressed.jpg}}
+    \caption{(a) Original image of the Star City Museum\cite{NASA_on_The_Commons_14}(b) Noise added artificially (c) Blurred with Gaussian (k=27 $\sigma=7$)}
+    \label{fig:noise}
+\end{figure}\end{minipage}
 
 Essentially, the three above filters are different mathematical functions applied both horizontally and vertically.\\
 \begin{minipage}{\textwidth}\begin{figure}[H]
@@ -402,7 +441,7 @@ than using the box filter\cite{Gonzalez_Woods_2018}.
 These filters are mainly used to smoothen(blur) the image, where the low frequencies are let through as well as reducing the effect of the high frequencies (high frequencies and low frequencies both referring to
 the brightness/darkness of each pixel). In practical applications, this is done to reduce high frequency noises.
 A creative application to smoothing the images, is that the smoothen images can be used as a mask to sharpen the image by adding the difference between the original and blurred image.
-This method is called \emph{unsharp masking}\cite{Szeliski_2022}.
+This method is called \emph{unsharp masking}, aiming to enhance the difference between the shadows and higlights on an image\cite{Szeliski_2022}.
 \[
   g_{sharp} = f + \gamma(f - h_{blur} \ast f)  
 \]
@@ -445,6 +484,50 @@ Then it is also preferable to smooth it with the Gaussian filter.
     G_{\boldsymbol{\hat{u}}} = u G_x + v G_y = u \frac{\partial G}{\partial x} + v \frac{\partial G}{\partial y} 
 \]
 This is called the \emph{directional} or \emph{oriented} filter.
+
+A similar to operator to the sobel filter is called the \emph{Prewitt operator}, which instead of convolving it with a perpendicular tent filter,
+it instead uses an average operator. Commonly however, the Sobel operator is preferred as it provides better performance\cite{NIXON2020141}. Through testing, the Sobel Operator seems
+to be less selective than the Prewitt Operator, but one can argue that the Prewitt is then preferred as it is more accurate.
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[Pattern]{\includegraphics*[width=0.29\textwidth]{codes/pattern.png}}
+    \subfigure[Sobel]{\includegraphics[width=0.29\textwidth]{img/directionSobel.png}}
+    \subfigure[Prewitt]{\includegraphics[width=0.29\textwidth]{img/directionScharr.png}}
+    \caption{Vertical edge detection using Sobel and Prewitt on a test pattern}\label{fig:pattern}
+\end{figure}\end{minipage}
+
+As seen on Figure \ref{fig:pattern}, the Sobel filter tapers the edges at the top into a gradient, whereas the Prewitt marks it confidently without tapering. In practice however,
+the minimal difference might not be worth the difference in the additional compute time \cite{NIXON2020141}.
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[]{
+        {$\begin{bmatrix}
+            -1 & 0 & 1 \\
+            -2 & 0 & 2 \\
+            -1 & 0 & 1
+        \end{bmatrix}$}
+    }
+    \subfigure[]{
+        {$\begin{bmatrix}
+            1 & 0 & -1 \\
+            1 & 0 & -1 \\
+            1 & 0 & -1
+        \end{bmatrix}$}
+    }
+    \subfigure[]{
+        {$\begin{bmatrix}
+            1 & 1 & 1 \\
+            0 & 0 & 0 \\
+            -1 & -1 & -1
+        \end{bmatrix}$}
+    }
+    \caption{Sobel and Prewitt operator comparison (a) Horizontal Sobel operator; 
+    (b) Horizontal Prewitt operator; (c) Vertical Prewitt operator}\label{fig:prewittSobel}
+\end{figure}\end{minipage}
+
+
 Another filter is called the \emph{Laplacian operator}, which is the second (undirected)derivative.\cite{Szeliski_2022}
 \[
     \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
@@ -458,7 +541,7 @@ and again, it can be smoothed with the Gaussian filter. It is equivalent to the 
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianOriginal.png}}
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacian.png}}
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianAdded.png}}
-    \caption{Laplacian Filtering\cite{NASA_on_The_Commons_1970} (a) Orinal image of NASA pilot; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
+    \caption{Laplacian Filtering (a) Original image of NASA pilot\cite{NASA_on_The_Commons_1970}; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
     \label{fig:padding_borders}
 \end{figure}\end{minipage}
 
@@ -479,7 +562,13 @@ With higher order steerable filters, it is possible to create filters that is mo
 it can also be possible to create filters that responds to more than one type of edge, whether bar edges (thin lines) or step edges (stark transitions between dark and light pixels), this however requires the \emph{Hilbert transform pairs}
 \cite{Szeliski_2022}.
 
-The common use case of steerable filtering is either for feature description (extracting interest points in images) or edge detection\cite{Szeliski_2022}.
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering\includegraphics[width=0.60\textwidth]{img/higher.PNG}
+    \caption{Fourth-order steerable filter (a) original test pattern (b) average oriented output (c) dominant orientation (d) oriented energy as a function of angle (polar plot)}\cite{Szeliski_2022}
+\end{figure}\end{minipage}
+
+Steerable filtering are most commonly used for edge detection, but another common use case is \emph{corner detection}. This requires multiple steerable operators in different directions as corners are defined as
+points with a sharp change in direction (high curvature)\cite{NIXON2020141}. Feature description is also one application of steerable filter\cite{Szeliski_2022}.
 
 \subsection{Summed area table (integral image)}
 To calculate pixels in a neighborhood, some pixels needs to be accessed multiple times and as the kernel size increases, this problem also magnifies as well. To
@@ -490,7 +579,7 @@ This can be done with the
     s(i, j) = s(i - 1, j) + s(i, j - 1) - s(i - 1,j - 1) + f(i, j)   
 \]
 This is also an example of recursive filtering, which takes a previous calculated value of a pixel and calculate it further for the next pixel. In this case, this can theoretically go on forever, but since no picture is infinite,
-the edges can be calculated using the padding strategies in Section \ref{chap:padding}.
+the edges can be calculated using the padding strategies in Section\ref{chap:padding}.
 
 Since the calculations are based on previously calculated pixels, this attempts to reduce the amount of times a pixel is used for calculations, as it immediately takes the already calculated value
 instead. The image $s(i, j)$, often called \emph{Integral image} can be computed using two additions per pixel. The summed area inside a chosen rectangl can be calculated by sampling 4 pixels from the summed area table.
@@ -533,7 +622,7 @@ instead. The image $s(i, j)$, often called \emph{Integral image} can be computed
     \caption{Summed area tables\cite{Szeliski_2022}}
     \label{fig:graph}
 \end{figure}\end{minipage}
-The above picture shows the relation of how the area is calculated. For summed area table, the red pixel is calculated by adding itself to the
+The above table shows the relation of how the area is calculated. For summed area table, the red pixel is calculated by adding itself to the
 two highlighted pixels in bold while subtracting the italicised symbol After the entire summed area table is calculated, it is now
 cost effective to calculate the area sum as the sum of the top left and bottom right numbers only needs to be subtracted with the other diagonal (remember that
 the starting indices requires it to go one pixel beyond the corresponding rectangle).
