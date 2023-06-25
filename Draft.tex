@@ -86,7 +86,7 @@ This is where filtering is utilized to pass through and create a desired output 
 having variations of their own, tailored to their specific use cases, whether for noise suppresion, edge detection or image enhancement\cite{MISRA2020289}. The comparison between each filter is not only determining which filters produces the highest quality output, yet
 also defined by its computing complexity, both in space and time complexity. Optimizing these filters by means of different algorithms and strategies while maintaining its quality is highly preferable.
 
-In this article, we will discuss the differences between different types of linear and non linear filters.
+In this article, we will discuss the differences between different types of linear and non linear filters.\footnotemark\footnotetext{Written by Jose}
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
 must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
@@ -180,8 +180,8 @@ There are a couple method to alleviate the calculation of the nonexistent neighb
     \item \textbf{Clamp:} The edge pixels are repeated indefinitely.
     \item \textbf{(Cyclic) Wrap (Repeat or Tile):} The entire image is repeated similar to tiling it infinitely.
     \item \textbf{Mirror:} The image is mirrored accordingly on each of the edges.
-    \item \textbf{Extend:} This is a combination of clamping and mirroring, where clamped image is subtracted with the mirrored image.
-\end{itemize}
+    \item \textbf{Extend:} This is a combination of clamping and mirroring, where the clamped image is subtracted with the mirrored image.
+\end{itemize}\label{chap:padding}
 
 This of course not only affects the unseen pixels, but the effects can bleed into the pixels inside the frame.
 \begin{minipage}{\textwidth}\begin{figure}[H]
@@ -221,7 +221,7 @@ outer product of two one dimensional kernels\cite{Szeliski_2022}.
     \end{bmatrix}
 \]
 
-Also notated as $K=vh^{\boldsymbol{T}}$, where $\boldsymbol{T}$ denotes tranposing $h$.
+Also notated as $K=vh^{\boldsymbol{T}}$, where $\boldsymbol{T}$ denotes transposing $h$, since both are supposedly vertical tuples.
 
 A method to check whether a given Kernel is separable is to use \emph{Singular Value Decomposition (SVD)} \cite{Szeliski_2022}
 
@@ -383,9 +383,21 @@ Two dimensionally, it can be expressed as \cite{MISRA2020289}
 \[
     G_{2D}(x, y, \sigma) = \frac{1}{2\pi\sigma^2}e^{-\frac{x^2 + y^2}{2\sigma^2}}
 \]
-It can be seen from the graph that the lower the sigma value, the narrower the neighborhood becomes. From testing, using the gaussian blur, as opposed to
-the box filter produces a better image, as it preserves rounded corners, however, to produce an equally `blurred' image, a larger kernel is required for Gaussian, which can be argued to then be slower
+It can be seen from the graph that the lower the sigma value, the narrower the neighborhood becomes. 
+
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[Box $(k=133)$]{\includegraphics[width=0.29\textwidth]{img/blurBox.png}}
+    \subfigure[Gaussian $(k=233)$]{\includegraphics[width=0.29\textwidth]{img/blurGaussian.png}}
+    \caption{Comparison between gaussian and box blur}\label{fig:gauss_box}
+\end{figure}\end{minipage}
+From Figure \ref{fig:gauss_box}, using the gaussian blur, as opposed to
+the box filter produces a more appealing image, as it preserves the shape of the image better as opposed to creating this `halo' effect
+and producing a squashed rectangular shape in the center. One disadvantage to Gaussian however is, to produce an equally `blurred' image, a larger kernel is required for Gaussian, which can be argued to then be slower
 than using the box filter\cite{Gonzalez_Woods_2018}.
+
+
 These filters are mainly used to smoothen(blur) the image, where the low frequencies are let through as well as reducing the effect of the high frequencies (high frequencies and low frequencies both referring to
 the brightness/darkness of each pixel). In practical applications, this is done to reduce high frequency noises.
 A creative application to smoothing the images, is that the smoothen images can be used as a mask to sharpen the image by adding the difference between the original and blurred image.
@@ -405,8 +417,10 @@ The result of the image traces a bright outline througout the image between the 
 the difference between the blurred image and the original results in an approximate edge detection. A better way to extract edges by means of linear filtering is
 by the use of the \emph{Sobel filter}. \cite{Szeliski_2022}
 
-\subsection{Sobel Filter}As per the example in the previous section, the horizontal Sobel operator is calculated by combining the \emph{horizontal central difference}
-(which calculates the second horizontal derivative of the pixel and places it in the center itself) and a vertical linear tent filter to smooth the result.
+\subsection{Sobel Filter}
+As per the example in the previous section, the horizontal Sobel operator is calculated by combining the \emph{horizontal central difference}
+(which calculates the second horizontal derivative of the pixel and places it in the center itself) and a vertical linear tent filter to smooth the result. Respectively, it can also
+be done for the vertical derivative.
 
 The two sobel operator emphasizes the horizontal or vertical edges respectively, although as seen in the images, it can also highlight diagonal edges.\\
 \begin{minipage}{\textwidth}\begin{figure}[H]
@@ -419,7 +433,7 @@ The two sobel operator emphasizes the horizontal or vertical edges respectively,
 
 \subsection{Band-pass and steerable Filter}
 In the above example, the sobel filter is calculated either for the horizontal or
-vertical axis. Nevertheless, it is possible to calculate filters that uses a specified 
+vertical axis. Nevertheless, it is possible to calculate filters (including for sobel) for any angles in between using a specified 
 \emph{directional derivative} $\nabla_{\boldsymbol{\hat{u}}} = \frac{\partial}{\partial\boldsymbol{\hat{u}}}$ 
 and a \emph{unit direction} $\boldsymbol{\hat{u}} = (\cos \theta, \sin \theta)$\cite{Szeliski_2022}.
 \[
@@ -460,14 +474,23 @@ which requires 3 basis functions. Although the basis filters are not in itself s
     G_{\boldsymbol{\hat{u}}\boldsymbol{\hat{u}}} = u^2 G_{xx} + 2uvG_{xy} + v^2 G_{yy} \text{with} \hspace*{0.5em}\boldsymbol{\hat{u}} = (u, v)
 \]
 
+With higher order steerable filters, it is possible to create filters that is more selective with the orientation (unlike in Figure \ref{fig:sobel}, where the lines placed at an angle of $45^\circ$ is highlighted). Alternatively,
+it can also be possible to create filters that responds to more than one type of edge, whether bar edges (thin lines) or step edges (stark transitions between dark and light pixels), this however requires the \emph{Hilbert transform pairs}
+\cite{Szeliski_2022}.
+
 The common use case of steerable filtering is either for feature description (extracting interest points in images) or edge detection\cite{Szeliski_2022}.
 
 \subsection{Summed area table (integral image)}
-The convolution of multiple box filters of different sizes and locations can be preprocessed with the purpose of reducing time complexity. This can be done with the
+To calculate pixels in a neighborhood, some pixels needs to be accessed multiple times and as the kernel size increases, this problem also magnifies as well. To
+better process the convolution of multiple box filters of different sizes and locations, preprocessing it can practically reduce the time complexity. 
+This can be done with the
 \emph{summed area table}, or the running sum of all the pixel values from the origin. It can be computed recursively through the raster-scan algorithm.
 \[
     s(i, j) = s(i - 1, j) + s(i, j - 1) - s(i - 1,j - 1) + f(i, j)   
 \]
+This is also an example of recursive filtering, which takes a previous calculated value of a pixel and calculate it further for the next pixel. In this case, this can theoretically go on forever, but since no picture is infinite,
+the edges can be calculated using the padding strategies in Section \ref{chap:padding}.
+
 Since the calculations are based on previously calculated pixels, this attempts to reduce the amount of times a pixel is used for calculations, as it immediately takes the already calculated value
 instead. The image $s(i, j)$, often called \emph{Integral image} can be computed using two additions per pixel. The summed area inside a chosen rectangl can be calculated by sampling 4 pixels from the summed area table.
 \[
@@ -476,7 +499,7 @@ instead. The image $s(i, j)$, often called \emph{Integral image} can be computed
  
 \begin{minipage}{\textwidth}\begin{figure}[H]
     \centering
-    \subfigure[S = 24]{
+    \subfigure[Original image(S = 24)]{
         $\begin{tabular}{|c|c|c|c|c|}
             \hline 3 & 2 & 7 & 2 & 3 \\
             \hline 1 & \cellcolor{green!25}5 & \cellcolor{green!25}1 & \cellcolor{green!25}3 & 4 \\
@@ -486,19 +509,39 @@ instead. The image $s(i, j)$, often called \emph{Integral image} can be computed
             \hline
         \end{tabular}$
     }
-    \subfigure[S = 28]{
+    \subfigure[Summed area table(S = 28)]{
         $\begin{tabular}{|c|c|c|c|c|}
             \hline 3 & 5 & 12 & 14 & 17 \\
-            \hline 4 & \cellcolor{green!25}\textit{11} & \cellcolor{green!25}\textbf{19} & 24 & 31 \\
-            \hline 9 & \cellcolor{green!25}\textbf{17} & \cellcolor{green!25}28 & 38 & 46    \\
+            \hline 4 & \cellcolor{cyan!25}\textit{11} & \cellcolor{cyan!25}\textbf{19} & 24 & 31 \\
+            \hline 9 & \cellcolor{cyan!25}\textbf{17} & \cellcolor{red!25}28 & 38 & 46    \\
             \hline 13 & 24 & 37 & 48 & 62 \\
             \hline 15 & 30 & 44 & 59 & 81 \\
             \hline
         \end{tabular}$
     }
-    \caption{One dimensional graphs of the filters}
+    \subfigure[Computation of area sum (S = 24)]{
+        $\begin{tabular}{|c|c|c|c|c|}
+            \hline \cellcolor{blue!25}\textbf{3} & 5 & 12 & \cellcolor{blue!25}\textit{14} & 17 \\
+            \hline 4 & \cellcolor{green!25}11 & \cellcolor{green!25}19 & \cellcolor{green!25}24 & 31 \\
+            \hline 9 & \cellcolor{green!25}17 & \cellcolor{green!25}28 & \cellcolor{green!25}38 & 46 \\
+            \hline \cellcolor{blue!25}\textit{13} & \cellcolor{green!25}24 & \cellcolor{green!25}37 & \cellcolor{blue!25}\textbf{48} & 62 \\
+            \hline 15 & 30 & 44 & 59 & 81 \\
+            \hline
+        \end{tabular}$
+    }
+    \caption{Summed area tables\cite{Szeliski_2022}}
     \label{fig:graph}
 \end{figure}\end{minipage}
+The above picture shows the relation of how the area is calculated. For summed area table, the red pixel is calculated by adding itself to the
+two highlighted pixels in bold while subtracting the italicised symbol After the entire summed area table is calculated, it is now
+cost effective to calculate the area sum as the sum of the top left and bottom right numbers only needs to be subtracted with the other diagonal (remember that
+the starting indices requires it to go one pixel beyond the corresponding rectangle).
+
+Although with this preprocessing it reduces the time complexity, the space complexity increases, since each pixel's range has now increased due to summing multiple pixel into a single pixel,
+hence each of them now requires $\log M + \log N$ additional bits ($M$ and $N$ being the width and height)\cite{Szeliski_2022}.
+
+A common use case for summed area table is for feature detections, computing simple multi-scale low-level features. In practice, it may be preferrable to instead use 
+moving average filters, for example in computing the sum in the sum of squared differences stereo (SSD) and motion algorithms\cite{Szeliski_2022}.\footnotemark\footnotetext{Entire section of linear filtering is written by Jose}
 
 % =========================================================================
 \bibliographystyle{alpha}

@@ -4,10 +4,10 @@ from scipy import ndimage
 
 # Read
 img = cv.imread("pilot.jpg")
-img = cv.resize(img, (img.shape[1] // 4, img.shape[0] // 4))
+#img = cv.resize(img, (img.shape[1] // 4, img.shape[0] // 4))
 
-blurred = cv.GaussianBlur(img, (3, 3), sigmaX=2)
-edges = cv.Laplacian(blurred, -1, ksize=3, scale=1, delta=0, borderType=cv.BORDER_REFLECT101)
+blurred = cv.GaussianBlur(img, (23, 23), sigmaX=7)
+edges = cv.Laplacian(blurred, -1, ksize=5, scale=3.5, delta=0, borderType=cv.BORDER_REFLECT101)
 added = cv.add(img, edges)
 
 cv.imwrite('../img/laplacianOriginal.png', img)
