@@ -29,6 +29,9 @@
 \usepackage{float}
 \usepackage{subcaption}
 
+\usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+
+
 \newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
 
 % Do not change these sizes and do not add superfluous 
@@ -75,7 +78,15 @@
 % =========================================================================
 
 \section{Introduction}
-T
+Every picture created is different, from the camera they are taken with, the color space, to the subjects on the picture itself. As humans, we have trained our eyes to adjust our perceptions to
+understand the pictures better and take information as we need through the context gathered from day to day life. This is unfortunately not the case for computers. Varying qualites and scenarios makes it
+hard for computers to handle images and extract necessary informations.
+
+This is where filtering is utilized to pass through and create a desired output image, catering to one' individual goals. The two major categories of filtering in Image processing are \emph{Linear} and \emph{Nonlinear filters}, with each
+having variations of their own, tailored to their specific use cases, whether for noise suppresion, edge detection or image enhancement\cite{MISRA2020289}. The comparison between each filter is not only determining which filters produces the highest quality output, yet
+also defined by its computing complexity, both in space and time complexity. Optimizing these filters by means of different algorithms and strategies while maintaining its quality is highly preferable.
+
+In this article, we will discuss the differences between different types of linear and non linear filters.
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
 must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
@@ -145,6 +156,8 @@ where the kernel is symmetrical on both axis (e.g. box blur), the result of conv
     \caption{Difference between Correlation and Convolution Filtering by translating 32 pixels}
 \end{figure}\end{minipage}
 
+By rotating the kernel $180^\circ$, it is possible to get the same output from convolution filtering with correlational filtering and vice versa\cite{Gonzalez_Woods_2018}.
+
 An apparent problem from neighborhood filtering is that on the edges, the neighbors simply does not exist in one or two directions 
 (e.g. a $1000\times1000$ image passed through a $3\times3$ kernel would produce a $998\times998$ image). 
 There are a couple method to alleviate the calculation of the nonexistent neighbors.
@@ -181,6 +194,11 @@ This of course not only affects the unseen pixels, but the effects can bleed int
     \caption{Effects of different paddings with box blur}
     \label{fig:boxBlur_borders}
 \end{figure}\end{minipage}
+
+As seen from Figure \ref{fig:boxBlur_borders}, with a constant padding, the color chosen for the constant value bleeds uniformly in the edges. The wrapped image
+can be convincing at times, but drastic changes from one border to another may lead to undesirable bleeding edges. If we instead clamp the image, the repeated pixels are noticeably
+present, depending on the kernel size, this may still be desireable. In this use case, mirror seems to be the most convincing. It cannot however be said, that mirror is objectively the better
+method, as it depends on the scenarios and use cases (e.g. if a subject is placed in a white background, then the constant padding may be desirable).
 
 There are other ways to handle the borders such as two-phase duplication,
 which is similar to clamp but alternates between the last 2 pixels.
@@ -344,7 +362,7 @@ complexity.
 \subsection{Examples of Linear Filters}
 \begin{itemize}
     \item \textbf{Box Filter:} each pixel is determined by the average of a $K \times K$ 
-        neighbordhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
+        neighborhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
         old pixel and adding the newest pixels to the running sum. As the pixel is influenced equally by a square neighborhood, this may not be ideal as some `square artifacts' can be seen.
     \item \textbf{Bartlett Filter:} one solution to this is by separably convolving the image
         with a linear `tent' function (having its peak in the middle). A $3\times 3$ version of this is called the bilinear kernel.
@@ -357,9 +375,9 @@ Essentially, the three above filters are different mathematical functions applie
     \subfigure[Average]{\includegraphics[width=0.29\textwidth]{img/box_graph.png}}
     \subfigure[Bartlett (Tent)]{\includegraphics[width=0.29\textwidth]{img/tent_graph.png}}
     \subfigure[Gaussian]{\includegraphics[width=0.29\textwidth]{img/gaussian_graph.png}}
-    \caption{One dimensional graphs of the filters}\label{fig:graph}
+    \caption{One dimensional graphs of the filters}
+    \label{fig:graph}
 \end{figure}\end{minipage}
-
 As its name suggests, the Gaussian Filter is based on the Gaussian function (also commonly known as the normal function).
 Two dimensionally, it can be expressed as \cite{MISRA2020289}
 \[
@@ -367,7 +385,7 @@ Two dimensionally, it can be expressed as \cite{MISRA2020289}
 \]
 It can be seen from the graph that the lower the sigma value, the narrower the neighborhood becomes. From testing, using the gaussian blur, as opposed to
 the box filter produces a better image, as it preserves rounded corners, however, to produce an equally `blurred' image, a larger kernel is required for Gaussian, which can be argued to then be slower
-than using the box filter.
+than using the box filter\cite{Gonzalez_Woods_2018}.
 These filters are mainly used to smoothen(blur) the image, where the low frequencies are let through as well as reducing the effect of the high frequencies (high frequencies and low frequencies both referring to
 the brightness/darkness of each pixel). In practical applications, this is done to reduce high frequency noises.
 A creative application to smoothing the images, is that the smoothen images can be used as a mask to sharpen the image by adding the difference between the original and blurred image.
@@ -428,6 +446,10 @@ and again, it can be smoothed with the Gaussian filter. It is equivalent to the 
     \caption{Laplacian Filtering\cite{NASA_on_The_Commons_1970} (a) Orinal image of NASA pilot; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
     \label{fig:padding_borders}
 \end{figure}\end{minipage}
+
+Since the laplacian filter does not rely on a specific direction, it can be seen at the above picture that the edges are agnostic to the direction and not biased to a certain angle. Bear in mind that smoothing the picture (in this case by means of the Gaussian filter)
+is necessary as it subdues the noises from being detected as edges.
+
 The aforementioned filters are more sophisticated as they require the second or first derivatives and they can filter both the low and high frequencies. 
 These filters are called \emph{band-pass filters}.
 Since the filters are based on the gradient fields, which are undirected, it can be `steered' by freely choosing a unit direction, hence the name
@@ -438,9 +460,45 @@ which requires 3 basis functions. Although the basis filters are not in itself s
     G_{\boldsymbol{\hat{u}}\boldsymbol{\hat{u}}} = u^2 G_{xx} + 2uvG_{xy} + v^2 G_{yy} \text{with} \hspace*{0.5em}\boldsymbol{\hat{u}} = (u, v)
 \]
 
+The common use case of steerable filtering is either for feature description (extracting interest points in images) or edge detection\cite{Szeliski_2022}.
+
 \subsection{Summed area table (integral image)}
-
-
+The convolution of multiple box filters of different sizes and locations can be preprocessed with the purpose of reducing time complexity. This can be done with the
+\emph{summed area table}, or the running sum of all the pixel values from the origin. It can be computed recursively through the raster-scan algorithm.
+\[
+    s(i, j) = s(i - 1, j) + s(i, j - 1) - s(i - 1,j - 1) + f(i, j)   
+\]
+Since the calculations are based on previously calculated pixels, this attempts to reduce the amount of times a pixel is used for calculations, as it immediately takes the already calculated value
+instead. The image $s(i, j)$, often called \emph{Integral image} can be computed using two additions per pixel. The summed area inside a chosen rectangl can be calculated by sampling 4 pixels from the summed area table.
+\[
+    S(i_0\hdots i_1, j_0\hdots j_1) = s(i_1, j_1) - s(i_1, j_0 - 1) - s(i_0 - 1, j_1) + s(i_0 - 1, j_0 - 1)
+\]
+ 
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[S = 24]{
+        $\begin{tabular}{|c|c|c|c|c|}
+            \hline 3 & 2 & 7 & 2 & 3 \\
+            \hline 1 & \cellcolor{green!25}5 & \cellcolor{green!25}1 & \cellcolor{green!25}3 & 4 \\
+            \hline 5 & \cellcolor{green!25}1 & \cellcolor{green!25}\textbf{3} & \cellcolor{green!25}5 & 1 \\
+            \hline 4 & \cellcolor{green!25}3 & \cellcolor{green!25}2 & \cellcolor{green!25}1 & 6 \\
+            \hline 2 & 4 & 1 & 4 & 8 \\
+            \hline
+        \end{tabular}$
+    }
+    \subfigure[S = 28]{
+        $\begin{tabular}{|c|c|c|c|c|}
+            \hline 3 & 5 & 12 & 14 & 17 \\
+            \hline 4 & \cellcolor{green!25}\textit{11} & \cellcolor{green!25}\textbf{19} & 24 & 31 \\
+            \hline 9 & \cellcolor{green!25}\textbf{17} & \cellcolor{green!25}28 & 38 & 46    \\
+            \hline 13 & 24 & 37 & 48 & 62 \\
+            \hline 15 & 30 & 44 & 59 & 81 \\
+            \hline
+        \end{tabular}$
+    }
+    \caption{One dimensional graphs of the filters}
+    \label{fig:graph}
+\end{figure}\end{minipage}
 
 % =========================================================================
 \bibliographystyle{alpha}
