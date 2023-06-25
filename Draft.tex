@@ -469,7 +469,7 @@ These filters are called \emph{band-pass filters}.
 Since the filters are based on the gradient fields, which are undirected, it can be `steered' by freely choosing a unit direction, hence the name
 \emph{steerable} filter. The advantage of this is that multiple variations of directions can easily be calculated with minimal cost as the derivative must only be calculated once. In case of higher order derivatives,
 the calculation must be done repeatedly with the same unit vector. This can although be calculated with a relatively small number of functions\cite{Szeliski_2022}. Consider the example below for the second-order derivatives,
-which requires 3 basis functions. Although the basis filters are not in itself separable, it can be expressed as a linear combination of multiple separable filters TODOTODOTODO
+which requires 3 basis functions. Although the basis filters are not in itself separable, it can be expressed as a linear combination of multiple separable filters.
 \[
     G_{\boldsymbol{\hat{u}}\boldsymbol{\hat{u}}} = u^2 G_{xx} + 2uvG_{xy} + v^2 G_{yy} \text{with} \hspace*{0.5em}\boldsymbol{\hat{u}} = (u, v)
 \]
