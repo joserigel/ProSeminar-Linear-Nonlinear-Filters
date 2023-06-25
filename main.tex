@@ -1,6 +1,7 @@
 \documentclass{article}
 \usepackage{biblatex}
 \usepackage{graphicx}
+\usepackage{float}
 \addbibresource{prosem.bib}
 \begin{document}
 \section{Non-Linear Filters}
@@ -12,7 +13,7 @@ First and foremost, what are Non-Linear filters? As mentioned previously, linear
 \subsubsection{Median Filtering}
 Consider a scenario with so-called salt and pepper noise, i.e. an image with noise consisting of sporadic black and white pixels. Were one to use for instance a Gaussian filter, one would quickly end up with a slightly blurred version of the original image (See fig 3.1). The noise would most likely still be there, simply in a slightly blurred format. Somewhat of a disappointment. There are however other methods of filtering, and for this scenario, a median filter would most likely do the trick.
 
-\begin{figure}[!hb]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{medianfiltering.jpeg}
     \caption{Figure 3.1}
@@ -54,14 +55,14 @@ Let's consider filtering the same image with a bilateral filter. When the bilate
 \subsubsection{Minimum- and Maximum Filtering}
 Two more types of non-linear filters are minimum- and maximum filters. These two filters are often also called dilation and erosion filters, respectively. They are classified amongst the so called morphological filters. In many ways, the minimum and maximum filters are two sides of the same coin, they are very similar in all but one point. As the minimum filter moves along the image, processing as it should, it simply chooses the smallest value inside the current kernel and applies this value to the relevant pixel. Maximum filters work very similarly, but, as one might guess, they instead pick the largest value and assigns that to the relevant pixel. Given the two filters other names, dilation and erosion, it might not be too much of a leap to assume what an image processed by these filters would look like relative to the original. Minimum filters, or dilation filters, simply dilate the darker areas of images (since darker values tend to be assigned lower numbers). Effective if one wishes to thicken the borders of a dark-coloured letter on a light background in an image. Contrarily, the maximum filter, or erosion filter, will erode darker pixels from images. If a black pixel is surrounded by only white pixels, it will be gone after an erosion filter has been applied.
 Lastly on minimum and maximum filters, a bit about binary images. What are binary images? They are in fact part of what led to the creation of morphological filters such as the here discussed minimum and maximum ones. As one might deduce from the name "binary images"  they operate with \textit{only} binary values. In other terms, each pixel can only have one of two values, black and white. Figure 3.6 demonstrates the application of the dilation and erosion filters on a binary image.
-\begin{figure}[!hb]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{minmax1.png}
     \caption{Figure 3.5 illustrates the usage of minimum and maximum filters}
     \label{fig:enter-label}
 \end{figure}
 
-\begin{figure}[!hb]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.5\linewidth]{minmax2.PNG}
     \caption{Figure 3.6 using a minimum filter succeeded by a maximum filter fills the gaps in the figure and then decreases it's size}
@@ -75,6 +76,7 @@ Cellular automata is something one probably has heard about in other contexts th
 
 In essence, cellular automata are grids of cells, each containing what can be considered a finite state machine. They can be very useful in the analysis of many different systems, as well as in the fields of physics and biology. 
 Now how specifically does one apply a cellular automaton to image processing?  As of now one of the most major application areas is noise removal in binary images.
+\cite{rosin}
 
 
 \subsection{Optimal Non-Linear filtering}
@@ -82,4 +84,8 @@ Placeholder text
 
 \subsection{Typical applications of Non-Linear filters}
 The subject of where one can apply Non-Linear filters has already been touched upon. Likely, the most prominent application area of non-linear filters is in noise filtering.
+
+
+\printbibliography
+
 \end{document}
