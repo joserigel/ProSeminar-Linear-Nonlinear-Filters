@@ -30,6 +30,8 @@
 \usepackage{subcaption}
 
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
+\usepackage{listings}
+
 
 
 \newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
@@ -354,12 +356,31 @@ Box & Bilinear & Gaussian & Sobel & Corner
 
 Note that for Corner filtering, the kernel is not normalized. Normalization is important as otherwise, a pixel may go beyond the allowed value range.
 In cases where the kernel has a negative value, it means that the pixel value is inverted, since an integer overflow occurs (e.g. $64
-(-1)= -64 \mod 256 = 192$ for one channel in an 8 bit pixel).
+(-1)= -64 \mod 256 = 192$ for one channel in an 8 bit pixel).`'
 With some filters, it is not always possible to separate it into just two operations, therefore it can be
 transformed into a series of 1 dimensional operations. However, this may be impractical as it increases the time and space
 complexity.
 
 \subsection{Examples of Linear Filters}
+Due to the fact that linear filter in essence is the sum of pixels in a neighborhood with varying weights and sizes, there are infinitely many different kernels that can
+define operators which classified as linear and invariant. It is also even possible to factor in different color channels. As an example, it is possible to shift the hue of an image.
+In this example, using a kernel of $\begin{bmatrix}0 & 0 & 1\end{bmatrix}$, the hue is shifted to the left (negative).
+\lstset{language=Python}
+\begin{lstlisting}
+img = cv.imread("color.jpg")
+kernel = np.array([[[0, 0, 1]]])
+convolved = ndimage.convolve(img, kernel, mode='reflect')
+cv.imwrite('../img/colorShift.jpg', convolved)
+\end{lstlisting}
+
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[original]{\includegraphics[width=0.30\textwidth]{codes/color.jpg}}
+    \subfigure[shifted]{\includegraphics[width=0.30\textwidth]{img/colorShift.jpg}}
+    \caption{Hue shifting using linear filters of the GALEX telescope image\cite{NASA_on_The_Commons_23}}
+    \label{fig:hueshift}
+\end{figure}\end{minipage}
 \begin{itemize}
     \item \textbf{Box Filter:} each pixel is determined by the average of a $K \times K$ 
         neighborhood of pixels. It is also often called the \emph{moving average}, as the calculation can be done with scanlines, subtracting the
@@ -444,6 +465,38 @@ Then it is also preferable to smooth it with the Gaussian filter.
     G_{\boldsymbol{\hat{u}}} = u G_x + v G_y = u \frac{\partial G}{\partial x} + v \frac{\partial G}{\partial y} 
 \]
 This is called the \emph{directional} or \emph{oriented} filter.
+
+A similar to operator to the sobel filter is called the \emph{Prewitt operator}, which instead of convolving it with a perpendicular tent filter,
+it instead uses an average operator.\cite{NIXON2020141}
+
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering
+    \subfigure[]{
+        {$\begin{bmatrix}
+            -1 & 0 & 1 \\
+            -2 & 0 & 2 \\
+            -1 & 0 & 1
+        \end{bmatrix}$}
+    }
+    \subfigure[]{
+        {$\begin{bmatrix}
+            1 & 0 & -1 \\
+            1 & 0 & -1 \\
+            1 & 0 & -1
+        \end{bmatrix}$}
+    }
+    \subfigure[]{
+        {$\begin{bmatrix}
+            1 & 1 & 1 \\
+            0 & 0 & 0 \\
+            -1 & -1 & -1
+        \end{bmatrix}$}
+    }
+    \caption{Sobel and Prewitt operator comparison (a) Horizontal Sobel operator; 
+    (b) Horizontal Prewitt operator; (c) Vertical Prewitt operator}\label{fig:prewittSobel}
+\end{figure}\end{minipage}
+
+
 Another filter is called the \emph{Laplacian operator}, which is the second (undirected)derivative.\cite{Szeliski_2022}
 \[
     \nabla^2 f = \frac{\partial^2 f}{\partial x^2} + \frac{\partial^2 f}{\partial y^2}
@@ -457,7 +510,7 @@ and again, it can be smoothed with the Gaussian filter. It is equivalent to the 
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianOriginal.png}}
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacian.png}}
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianAdded.png}}
-    \caption{Laplacian Filtering\cite{NASA_on_The_Commons_1970} (a) Orinal image of NASA pilot; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
+    \caption{Laplacian Filtering (a) Original image of NASA pilot\cite{NASA_on_The_Commons_1970}; (b) Output of the laplacian filter with Gaussian blur (c) Combined image of the orientation map and original}
     \label{fig:padding_borders}
 \end{figure}\end{minipage}
 
@@ -478,7 +531,13 @@ With higher order steerable filters, it is possible to create filters that is mo
 it can also be possible to create filters that responds to more than one type of edge, whether bar edges (thin lines) or step edges (stark transitions between dark and light pixels), this however requires the \emph{Hilbert transform pairs}
 \cite{Szeliski_2022}.
 
-The common use case of steerable filtering is either for feature description (extracting interest points in images) or edge detection\cite{Szeliski_2022}.
+\begin{minipage}{\textwidth}\begin{figure}[H]
+    \centering\includegraphics[width=0.60\textwidth]{img/higher.PNG}
+    \caption{Fourth-order steerable filter (a) original test pattern (b) average oriented output (c) dominant orientation (d) oriented energy as a function of angle (polar plot)}\cite{Szeliski_2022}
+\end{figure}\end{minipage}
+
+Steerable filtering are most commonly used for edge detection, but another common use case is \emph{corner detection}. This requires multiple steerable operators in different directions as corners are defined as
+points with a sharp change in direction (high curvature)\cite{NIXON2020141}. Feature description is also one application of steerable filter\cite{Szeliski_2022}.
 
 \subsection{Summed area table (integral image)}
 To calculate pixels in a neighborhood, some pixels needs to be accessed multiple times and as the kernel size increases, this problem also magnifies as well. To
@@ -489,7 +548,7 @@ This can be done with the
     s(i, j) = s(i - 1, j) + s(i, j - 1) - s(i - 1,j - 1) + f(i, j)   
 \]
 This is also an example of recursive filtering, which takes a previous calculated value of a pixel and calculate it further for the next pixel. In this case, this can theoretically go on forever, but since no picture is infinite,
-the edges can be calculated using the padding strategies in Section \ref{chap:padding}.
+the edges can be calculated using the padding strategies in Section\ref{chap:padding}.
 
 Since the calculations are based on previously calculated pixels, this attempts to reduce the amount of times a pixel is used for calculations, as it immediately takes the already calculated value
 instead. The image $s(i, j)$, often called \emph{Integral image} can be computed using two additions per pixel. The summed area inside a chosen rectangl can be calculated by sampling 4 pixels from the summed area table.
@@ -532,7 +591,7 @@ instead. The image $s(i, j)$, often called \emph{Integral image} can be computed
     \caption{Summed area tables\cite{Szeliski_2022}}
     \label{fig:graph}
 \end{figure}\end{minipage}
-The above picture shows the relation of how the area is calculated. For summed area table, the red pixel is calculated by adding itself to the
+The above table shows the relation of how the area is calculated. For summed area table, the red pixel is calculated by adding itself to the
 two highlighted pixels in bold while subtracting the italicised symbol After the entire summed area table is calculated, it is now
 cost effective to calculate the area sum as the sum of the top left and bottom right numbers only needs to be subtracted with the other diagonal (remember that
 the starting indices requires it to go one pixel beyond the corresponding rectangle).
