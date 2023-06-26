@@ -31,7 +31,7 @@
 
 \usepackage[table]{xcolor}% http://ctan.org/pkg/xcolor
 \usepackage{listings}
-
+\usepackage{caption}
 
 
 
@@ -71,9 +71,9 @@
 \include{titlepage}
 
 \begin{abstract}
-% +++++++++++++++++++++++++
-% Insert your Abstract here (one paragraph summary)
-% +++++++++++++++++++++++++
+    Since images are not created the same, and its raw state is not always desired, they can be passed through so called filters to produce an ouput image that is more
+    desirable to the viewer. With variations of linear and non-linear filters, many different outcomes can be created for different applications, such as smoothing, image enhancement and edge detection.
+    The linear property of linear filters allows it to be simpler and cost effective but still providing useful end images, whereas linear filtering can manufacture a more accurate and desired end result at the cost of  more computer resources.
 \end{abstract}
 
 \tableofcontents
@@ -157,6 +157,7 @@ it produces the reflected signal (inverted signal in both dimensions).\cite{Szel
 where the kernel is symmetrical on both axis (e.g. box blur), the result of convolutional and correlational is the same.
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[correlation]{\includegraphics[width=0.19\textwidth]{img/correlation.jpg}}
     \subfigure[convolution]{\includegraphics[width=0.19\textwidth]{img/convolved}}
@@ -172,6 +173,7 @@ There are a couple method to alleviate the calculation of the nonexistent neighb
 \subsection{Padding (Border Effects)}
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[zero]{\includegraphics[width=0.19\textwidth]{img/border_constant}}
     \subfigure[wrap]{\includegraphics[width=0.19\textwidth]{img/border_wrap}}
@@ -192,6 +194,7 @@ There are a couple method to alleviate the calculation of the nonexistent neighb
 
 This of course not only affects the unseen pixels, but the effects can bleed into the pixels inside the frame.
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[zero]{\includegraphics[width=0.19\textwidth]{img/boxBlur_constant}}
     \subfigure[wrap]{\includegraphics[width=0.19\textwidth]{img/boxBlur_wrap}}
@@ -380,6 +383,7 @@ cv.imwrite('../img/colorShift.jpg', convolved)
 
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[original]{\includegraphics[width=0.30\textwidth]{codes/color.jpg}}
     \subfigure[shifted]{\includegraphics[width=0.30\textwidth]{img/colorShift.jpg}}
@@ -401,6 +405,7 @@ edge detection or image enhancement.
 This intuitively can be used to reduce the amount of noise on a picture. However, since it naively blurs the entire image,
 details are also lost in the process.\\
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[original]{\includegraphics[width=0.32\textwidth]{codes/original_noise.jpg}}
     \subfigure[noise]{\includegraphics[width=0.32\textwidth]{codes/noise.jpg}}
@@ -411,6 +416,7 @@ details are also lost in the process.\\
 
 Essentially, the three above filters are different mathematical functions applied both horizontally and vertically.\\
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[Average]{\includegraphics[width=0.29\textwidth]{img/box_graph.png}}
     \subfigure[Bartlett (Tent)]{\includegraphics[width=0.29\textwidth]{img/tent_graph.png}}
@@ -427,6 +433,7 @@ It can be seen from the graph that the lower the sigma value, the narrower the n
 
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[Box $(k=133)$]{\includegraphics[width=0.29\textwidth]{img/blurBox.png}}
     \subfigure[Gaussian $(k=233)$]{\includegraphics[width=0.29\textwidth]{img/blurGaussian.png}}
@@ -464,6 +471,7 @@ be done for the vertical derivative.
 
 The two sobel operator emphasizes the horizontal or vertical edges respectively, although as seen in the images, it can also highlight diagonal edges.\\
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[original]{\includegraphics*[width=0.29\textwidth]{codes/nasa.jpg}}
     \subfigure[horizontal]{\includegraphics[width=0.29\textwidth]{img/sobelHorizontal.png}}
@@ -490,6 +498,7 @@ it instead uses an average operator. Commonly however, the Sobel operator is pre
 to be less selective than the Prewitt Operator, but one can argue that the Prewitt is then preferred as it is more accurate.
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[Pattern]{\includegraphics*[width=0.29\textwidth]{codes/pattern.png}}
     \subfigure[Sobel]{\includegraphics[width=0.29\textwidth]{img/directionSobel.png}}
@@ -501,6 +510,7 @@ As seen on Figure \ref{fig:pattern}, the Sobel filter tapers the edges at the to
 the minimal difference might not be worth the difference in the additional compute time \cite{NIXON2020141}.
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[]{
         {$\begin{bmatrix}
@@ -537,6 +547,7 @@ and again, it can be smoothed with the Gaussian filter. It is equivalent to the 
     \nabla^2 G (x, y, \sigma) = (\frac{x^2 + y^2}{\sigma^4} - \frac{2}{\sigma^2}) G (x, y, \sigma)
 \]
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacianOriginal.png}}
     \subfigure[]{\includegraphics[width=0.29\textwidth]{img/laplacian.png}}
@@ -563,6 +574,7 @@ it can also be possible to create filters that responds to more than one type of
 \cite{Szeliski_2022}.
 
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering\includegraphics[width=0.60\textwidth]{img/higher.PNG}
     \caption{Fourth-order steerable filter (a) original test pattern (b) average oriented output (c) dominant orientation (d) oriented energy as a function of angle (polar plot)\cite{Szeliski_2022}}
 \end{figure}\end{minipage}
@@ -591,6 +603,7 @@ instead. The image $s(i, j)$, often called \emph{Integral image} can be computed
 \]
  
 \begin{minipage}{\textwidth}\begin{figure}[H]
+    \captionsetup{justification=centering}
     \centering
     \subfigure[Original image(S = 24)]{
         $\begin{tabular}{|c|c|c|c|c|}
