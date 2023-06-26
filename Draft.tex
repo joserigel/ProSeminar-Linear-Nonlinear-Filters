@@ -670,7 +670,7 @@ Consider a scenario with so-called salt and pepper noise, i.e. an image with noi
 Now we have seen an example median filtering, compared to Gaussian filtering, for a specific scenario, and what it does, it is time to dive into what a \textit{median filter actually is}. The algorithm works in this way: Given an input signal, in this case an image, it goes through every single pixel of the image, and replaces the value with the median value of the adjacent pixels. One can also let it go through the image whilst checking adjacent pixels in a 3px, 10px, or generally X-pixel radius around the current one, and replace it with the median of the pixels inside this X-pixel radius. The "X-pixel radius" is called a kernel. Increasing the kernel-size of the filter might lead to a "smeared" and somewhat blurry look in many scenarios.
 \begin{figure}{h}
     \centering
-    \includegraphics[width=1\linewidth]{median_example.jpg}
+    \includegraphics[width=0.75\linewidth]{median_example.jpg}
     \caption{Processing the image with a bigger kernel radius leads to less "crispness"}
     \label{fig:enter-label}
 \end{figure}
@@ -714,7 +714,7 @@ Two more types of non-linear filters are minimum- and maximum filters. These two
 Lastly on minimum and maximum filters, a bit about binary images. What are binary images? They are in fact part of what led to the creation of morphological filters such as the here discussed minimum and maximum ones. As one might deduce from the name "binary images"  they operate with \textit{only} binary values. In other terms, each pixel can only have one of two values, black and white.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{minmax1.png}
+    \includegraphics[width=0.75\linewidth]{minmax1.png}
     \caption{Illustrates the usage of minimum and maximum filters on a grayscale image. Using the minimum filter expands the area of the figure, whereas applying a maximum filter reduces it's size}
 \end{figure}
 
@@ -750,7 +750,7 @@ How can one apply this concept in image processing? Mostly in image segmentation
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{scattergraph.png}
+    \includegraphics[width=0.75\linewidth]{scattergraph.png}
     \caption{A typical graph for which the mean shift algorithm could be applied. The clusters can be viewed as hills. Increased data point density would imply a "steeper hill". One can roughly recognize the outline of three main clusters here}
     \label{fig:enter-label}
 \end{figure}
