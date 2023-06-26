@@ -570,6 +570,9 @@ it can also be possible to create filters that responds to more than one type of
 Steerable filtering are most commonly used for edge detection, but another common use case is \emph{corner detection}. This requires multiple steerable operators in different directions as corners are defined as
 points with a sharp change in direction (high curvature)\cite{NIXON2020141}. Feature description is also one application of steerable filter\cite{Szeliski_2022}.
 
+With all the different kernels and each of their own applications, it is evident that even though linear filtering is fundamentally passing the weighted sum of a neighborhood, it can be a really powerful tool. Especially with today's hardware
+linear filtering can be considered a quick and cost effective method for image processing.
+
 \subsection{Summed area table (integral image)}
 To calculate pixels in a neighborhood, some pixels needs to be accessed multiple times and as the kernel size increases, this problem also magnifies as well. To
 better process the convolution of multiple box filters of different sizes and locations, preprocessing it can practically reduce the time complexity. 
@@ -632,6 +635,7 @@ hence each of them now requires $\log M + \log N$ additional bits ($M$ and $N$ b
 
 A common use case for summed area table is for feature detections, computing simple multi-scale low-level features. In practice, it may be preferrable to instead use 
 moving average filters, for example in computing the sum in the sum of squared differences stereo (SSD) and motion algorithms\cite{Szeliski_2022}.\footnotemark\footnotetext{Entire section of linear filtering is written by Jose}
+ 
 
 % ========================================================================= ALEX
 
