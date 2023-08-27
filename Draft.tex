@@ -71,9 +71,12 @@
 \include{titlepage}
 
 \begin{abstract}
-    Since images are not created the same, and its raw state is not always desired, they can be passed through so called filters to produce an ouput image that is more
-    desirable to the viewer. With variations of linear and non-linear filters, many different outcomes can be created for different applications, such as smoothing, image enhancement and edge detection.
-    The linear property of linear filters allows it to be simpler and cost effective but still providing useful end images, whereas linear filtering can manufacture a more accurate and desired end result at the cost of  more computer resources.
+    Linear \textit{(spatial)} Filters are operators for images that produces a desirable output by means
+    of kernels that is applied equally throughout an image. Calculating these filters by means of convolution or correlation are typically used, but
+    can be optimized by separating the kernels, or with a summed area table. With different operators, such as the Sobel, Gaussian and Laplacian Kernels, these filters
+    can be used for applications ranging from smoothing to edge detection. Each kernels have their own strengths in regards to quality and complexity. Non-linear filter are not bounded by the linear property of its counterpart.
+    They provide filters with higher complexities, which in turns provide better results and can solve problems that linear filters and can extract information with better context, such as removing the salt and pepper noise, or only
+    highlighting major edges relevant to the user. Methods such as bilateral filtering, median filtering can aid in removing noise. Further applications such as image restoration and pattern recognition can also be achieved by means of non-linear filters.
 \end{abstract}
 
 \tableofcontents
@@ -95,7 +98,7 @@ only require a linear neighborhood operation to calculate the output image. For 
 feature concepts such as cellular automata. This article aims to discuss different types of filters, their applications and how each of them provides different benefits\footnotemark\footnotetext{Written by Jose}
 \section{Linear Filters}
 With \textbf{Linear Filtering}, or specifically linear spatial filtering, the function which is used to pass the image through
-must be linear and shift invariant. The function $\pmb{L}$ is considered linear if there exists two constants $a$ and $b$ for any
+must be linear and shift invariant. The function $\pmb{L}$ is considered linear if for any two constants $a$ and $b$, and for any
 two input pixels $f_1(m, n)$ and $f_2(m, n)$ such that
 
 \begin{align*}
@@ -103,7 +106,7 @@ two input pixels $f_1(m, n)$ and $f_2(m, n)$ such that
     \implies & a \cdot g_1(m, n) + b \cdot g_2(m, n) = \boldsymbol{L} [a \cdot f_1(m, n) + b \cdot f_2(m, n)]
 \end{align*}
 
-also called the \emph{superposition property of linear systems}\cite{BovikActon09}. Whereas a function is considered \emph{shift invariant} when
+This is also called the \emph{superposition property of linear systems}\cite{BovikActon09}. Whereas a function is considered \emph{shift invariant} when
 \begin{align*}
     \implies & g(m, n) = \boldsymbol{L} [f(m, n)]\\
     \implies & g(m - p, n - q) =  \boldsymbol{L} [f(m - p, n - q)]
@@ -207,7 +210,7 @@ This of course not only affects the unseen pixels, but the effects can bleed int
 
 As seen from Figure \ref{fig:boxBlur_borders}, with a constant padding, the color chosen for the constant value bleeds uniformly in the edges. The wrapped image
 can be convincing at times, but drastic changes from one border to another may lead to undesirable bleeding edges. If we instead clamp the image, the repeated pixels are noticeably
-present, depending on the kernel size, this may still be desireable. In this use case, mirror seems to be the most convincing. It cannot however be said, that mirror is objectively the better
+present, depending on the kernel size, this may still be desirable. In this use case, mirror seems to be the most convincing. It cannot however be said, that mirror is objectively the better
 method, as it depends on the scenarios and use cases (e.g. if a subject is placed in a white background, then the constant padding may be desirable).
 
 There are other ways to handle the borders such as two-phase duplication,
@@ -502,7 +505,7 @@ to be less selective than the Prewitt Operator, but one can argue that the Prewi
     \centering
     \subfigure[Pattern]{\includegraphics*[width=0.29\textwidth]{codes/pattern.png}}
     \subfigure[Sobel]{\includegraphics[width=0.29\textwidth]{img/directionSobel.png}}
-    \subfigure[Prewitt]{\includegraphics[width=0.29\textwidth]{img/directionScharr.png}}
+    \subfigure[Prewitt]{\includegraphics[width=0.29\textwidth]{img/directionPrewitt.png}}
     \caption{Vertical edge detection using Sobel and Prewitt on a test pattern}\label{fig:pattern}
 \end{figure}\end{minipage}
 
